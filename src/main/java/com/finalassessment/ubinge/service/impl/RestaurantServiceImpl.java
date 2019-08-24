@@ -70,4 +70,13 @@ public class RestaurantServiceImpl implements RestaurantService {
         });
         return restaurant;
     }
+
+    @Override
+    public Restaurant removeFoodItems(Long restaurantId, List<Long> foodItemIds) {
+        Restaurant restaurant = findById(restaurantId);
+        log.debug("Removing Food Items from Restaurant" + restaurant.getName() + " from Service. ");
+        List<FoodItem> foodItems = foodItemRepository.findAllById(foodItemIds);
+        foodItemRepository.deleteAll(foodItems);
+        return restaurant;
+    }
 }

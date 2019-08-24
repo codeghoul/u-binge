@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface RestaurantService extends CrudService<Restaurant, Long> {
     Restaurant addFoodItems(Long restaurantId, List<FoodItem> foodItems);
+
+    Restaurant removeFoodItems(Long restaurantId, List<Long> foodItemIds);
 }

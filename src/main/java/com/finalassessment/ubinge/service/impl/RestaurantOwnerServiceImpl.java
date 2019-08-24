@@ -76,7 +76,8 @@ public class RestaurantOwnerServiceImpl implements RestaurantOwnerService {
         log.debug("Removing Restaurants from Restaurant Owner and Vice Versa from Service.");
         RestaurantOwner restaurantOwner = findById(restaurantOwnerId);
         List<Restaurant> restaurants = restaurantRepository.findAllById(restaurantIds);
-        restaurants.stream().forEach(restaurantRepository::delete);
+        restaurantRepository.deleteAll(restaurants);
+//        restaurants.stream().forEach(restaurantRepository::delete);
         return restaurantOwner;
     }
 }

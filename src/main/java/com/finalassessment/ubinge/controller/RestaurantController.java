@@ -56,4 +56,11 @@ public class RestaurantController {
         log.debug("Adding food items to restaurants.");
         return restaurantService.addFoodItems(restaurantId, foodItems);
     }
+
+    @DeleteMapping(value = "/restaurants/{restaurantId}/fooditems")
+    public Restaurant removeFoodItems(@PathVariable Long restaurantId, @RequestBody List<Long> foodItemIds) {
+        log.debug("Removing food items from restaurants");
+        return restaurantService.removeFoodItems(restaurantId, foodItemIds);
+    }
+
 }
