@@ -38,9 +38,15 @@ public class RestaurantOwnerController {
     }
 
     @PostMapping(value = "/restaurantowners/{restaurantOwnerId}/restaurants")
-    public RestaurantOwner saveRestaurantsByRestaurantId(@PathVariable Long restaurantOwnerId, @RequestBody List<Restaurant> restaurants) {
-        log.debug("Adding Restaurants to system by Restaurant Owners.");
+    public RestaurantOwner saveRestaurants(@PathVariable Long restaurantOwnerId, @RequestBody List<Restaurant> restaurants) {
+        log.debug("Adding Restaurants to system - Restaurant Owners.");
         return restaurantOwnerService.saveRestaurants(restaurantOwnerId, restaurants);
+    }
+
+    @DeleteMapping(value = "/restaurantowners/{restaurantOwnerId}/restaurants")
+    public RestaurantOwner deleteRestaurants(@PathVariable Long restaurantOwnerId, @RequestBody List<Long> restaurantIds) {
+        log.debug("Removing Restaurants from system - Restaurant Owners");
+        return restaurantOwnerService.deleteRestaurants(restaurantOwnerId, restaurantIds);
     }
 
     @PutMapping(value = "/restaurantowners/{restaurantOwnerId}")
