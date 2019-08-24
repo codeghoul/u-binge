@@ -1,6 +1,7 @@
 package com.finalassessment.ubinge.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,12 +16,14 @@ public class Restaurant extends GeneralDetails {
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_owner_id")
-    @JsonBackReference
+    @JsonBackReference(value = "restaurantOwner-restaurants")
     private RestaurantOwner restaurantOwner;
 
     @OneToMany(mappedBy = "restaurant")
+    @JsonManagedReference(value=  "restaurant-foodItems")
     private Set<FoodItem> foodItems;
 
     @OneToMany(mappedBy = "restaurant")
+    @JsonManagedReference(value = "restaurant-orders")
     private Set<Order> orders;
 }

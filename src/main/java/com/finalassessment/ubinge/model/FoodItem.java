@@ -21,10 +21,10 @@ public class FoodItem extends BaseEntity {
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
-    @JsonBackReference
+    @JsonBackReference(value=  "restaurant-foodItems")
     private Restaurant restaurant;
 
     @OneToMany(mappedBy = "foodItem")
-    @JsonManagedReference
+    @JsonManagedReference(value = "foodItem-orderFoodItems")
     private Set<OrderFoodItem> orderFoodItems;
 }

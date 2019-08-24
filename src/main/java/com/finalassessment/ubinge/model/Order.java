@@ -17,17 +17,17 @@ import java.util.Set;
 public class Order extends BaseEntity {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
-    @JsonBackReference
+    @JsonBackReference(value = "user-orders")
     private Customer customer;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "delivery_guy_id")
-    @JsonBackReference
+    @JsonBackReference(value = "delivery-guy-orders")
     private DeliveryGuy deliveryGuy;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
-    @JsonBackReference
+    @JsonBackReference(value = "restaurant-orders")
     private Restaurant restaurant;
 
     @Column
@@ -45,6 +45,6 @@ public class Order extends BaseEntity {
     private Double totalPrice;
 
     @OneToMany(mappedBy = "order")
-    @JsonManagedReference
+    @JsonManagedReference(value = "order-orderFoodItems")
     private Set<OrderFoodItem> orderFoodItems = new HashSet<>();
 }
