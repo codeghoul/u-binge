@@ -15,17 +15,17 @@ import java.util.Set;
 @Entity(name = "Order")
 @Table(name = "orders")
 public class Order extends BaseEntity {
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "customer_id")
     @JsonBackReference(value = "user-orders")
     private Customer customer;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "delivery_guy_id")
     @JsonBackReference(value = "delivery-guy-orders")
     private DeliveryGuy deliveryGuy;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "restaurant_id")
     @JsonBackReference(value = "restaurant-orders")
     private Restaurant restaurant;

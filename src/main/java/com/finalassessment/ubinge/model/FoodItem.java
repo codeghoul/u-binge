@@ -17,7 +17,7 @@ public class FoodItem extends BaseEntity {
     @Column
     private Double price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "restaurant_id")
     @JsonBackReference(value = "restaurant-foodItems")
     private Restaurant restaurant;
