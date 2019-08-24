@@ -68,7 +68,6 @@ public class RestaurantOwnerServiceImpl implements RestaurantOwnerService {
             restaurant.setRestaurantOwner(restaurantOwner);
             restaurantRepository.save(restaurant);
         });
-        restaurantOwner.getRestaurants().addAll(restaurants);
         return restaurantOwnerRepository.save(restaurantOwner);
     }
 
@@ -77,8 +76,7 @@ public class RestaurantOwnerServiceImpl implements RestaurantOwnerService {
         log.debug("Removing Restaurants from Restaurant Owner and Vice Versa from Service.");
         RestaurantOwner restaurantOwner = findById(restaurantOwnerId);
         List<Restaurant> restaurants = restaurantRepository.findAllById(restaurantIds);
-        restaurantOwner.getRestaurants().removeAll(restaurants);
         restaurants.stream().forEach(restaurantRepository::delete);
-        return restaurantOwnerRepository.save(restaurantOwner);
+        return restaurantOwner;
     }
 }
