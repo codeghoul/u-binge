@@ -1,12 +1,11 @@
 package com.finalassessment.ubinge.controller;
 
+import com.finalassessment.ubinge.model.FoodItem;
 import com.finalassessment.ubinge.model.Restaurant;
 import com.finalassessment.ubinge.service.RestaurantService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -51,4 +50,10 @@ public class RestaurantController {
 //    public void deleteRestaurantById(@PathVariable Long restaurantId) {
 //        restaurantService.deleteById(restaurantId);
 //    }
+
+    @PostMapping(value = "/restaurants/{restaurantId}/fooditems")
+    public Restaurant addFoodItems(@PathVariable Long restaurantId, @RequestBody List<FoodItem> foodItems) {
+        log.debug("Adding food items to restaurants.");
+        return restaurantService.addFoodItems(restaurantId, foodItems);
+    }
 }

@@ -1,7 +1,9 @@
 package com.finalassessment.ubinge.service.impl;
 
 import com.finalassessment.ubinge.exception.RestaurantNotFoundException;
+import com.finalassessment.ubinge.model.FoodItem;
 import com.finalassessment.ubinge.model.Restaurant;
+import com.finalassessment.ubinge.repository.FoodItemRepository;
 import com.finalassessment.ubinge.repository.RestaurantRepository;
 import com.finalassessment.ubinge.service.RestaurantService;
 import lombok.extern.slf4j.Slf4j;
@@ -14,10 +16,12 @@ import java.util.List;
 @Service
 public class RestaurantServiceImpl implements RestaurantService {
     private RestaurantRepository restaurantRepository;
+    private FoodItemRepository foodItemRepository;
 
     @Autowired
-    public RestaurantServiceImpl(RestaurantRepository restaurantRepository) {
+    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, FoodItemRepository foodItemRepository) {
         this.restaurantRepository = restaurantRepository;
+        this.foodItemRepository = foodItemRepository;
     }
 
     @Override
@@ -54,5 +58,16 @@ public class RestaurantServiceImpl implements RestaurantService {
     public void deleteById(Long restaurantId) {
         log.debug("Deleting Restaurant By Id from Service.");
         restaurantRepository.deleteById(restaurantId);
+    }
+
+    @Override
+    public Restaurant addFoodItems(Long restaurantId, List<FoodItem> foodItems) {
+        Restaurant restaurant = findById(restaurantId);
+        log.debug("Adding Food Items to Restaurant "+ restaurant.getName() + " from Service. ");
+        foodItems.stream().forEach(foodItem -> {
+            foodItem.setRestaurant(restaurant);
+            foodItemRepository.save(foodItem);
+        });
+        return restaurant;
     }
 }
