@@ -71,4 +71,14 @@ public class RestaurantOwnerServiceImpl implements RestaurantOwnerService {
         restaurantOwner.getRestaurants().addAll(restaurants);
         return restaurantOwnerRepository.save(restaurantOwner);
     }
+
+    @Override
+    public RestaurantOwner deleteRestaurants(Long restaurantOwnerId, List<Long> restaurantIds) {
+        log.debug("Removing Restaurants from Restaurant Owner and Vice Versa from Service.");
+        RestaurantOwner restaurantOwner = findById(restaurantOwnerId);
+        List<Restaurant> restaurants = restaurantRepository.findAllById(restaurantIds);
+        restaurantOwner.getRestaurants().removeAll(restaurants);
+        restaurants.stream().forEach(restaurantRepository::delete);
+        return restaurantOwnerRepository.save(restaurantOwner);
+    }
 }

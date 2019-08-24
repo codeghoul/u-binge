@@ -14,7 +14,7 @@ import java.util.Set;
 @Table(name = "restaurant")
 public class Restaurant extends GeneralDetails {
 
-    @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_owner_id")
     @JsonBackReference(value = "restaurantOwner-restaurants")
     private RestaurantOwner restaurantOwner;
