@@ -7,6 +7,8 @@ import com.finalassessment.ubinge.repository.RestaurantOwnerRepository;
 import com.finalassessment.ubinge.repository.RestaurantRepository;
 import com.finalassessment.ubinge.service.RestaurantOwnerService;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,7 @@ public class RestaurantOwnerServiceImpl implements RestaurantOwnerService {
     private RestaurantOwnerRepository restaurantOwnerRepository;
     private RestaurantRepository restaurantRepository;
 
+    @Contract(pure = true)
     @Autowired
     public RestaurantOwnerServiceImpl(RestaurantOwnerRepository restaurantOwnerRepository, RestaurantRepository restaurantRepository) {
         this.restaurantOwnerRepository = restaurantOwnerRepository;
@@ -61,7 +64,7 @@ public class RestaurantOwnerServiceImpl implements RestaurantOwnerService {
     }
 
     @Override
-    public RestaurantOwner saveRestaurants(Long restaurantOwnerId, List<Restaurant> restaurants) {
+    public RestaurantOwner saveRestaurants(Long restaurantOwnerId, @NotNull List<Restaurant> restaurants) {
         log.debug("Adding Restaurant Owner to Restaurants and Vice Versa from Service.");
         RestaurantOwner restaurantOwner = findById(restaurantOwnerId);
         restaurants.stream().forEach(restaurant -> {

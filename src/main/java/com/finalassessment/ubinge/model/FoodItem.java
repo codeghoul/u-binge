@@ -1,12 +1,10 @@
 package com.finalassessment.ubinge.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -21,10 +19,10 @@ public class FoodItem extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
-    @JsonBackReference(value=  "restaurant-foodItems")
+    @JsonBackReference(value = "restaurant-foodItems")
     private Restaurant restaurant;
 
-    @OneToMany(mappedBy = "foodItem")
-    @JsonManagedReference(value = "foodItem-orderFoodItems")
-    private Set<OrderFoodItem> orderFoodItems;
+//    @OneToMany(mappedBy = "foodItem")
+//    @JsonManagedReference(value = "foodItem-orderFoodItems")
+//    private Set<OrderFoodItem> orderFoodItems;
 }

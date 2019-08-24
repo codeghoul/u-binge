@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class OrderFoodItem extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "food_item_id")
-    @JsonBackReference(value = "foodItem-orderFoodItems")
+//    @JsonBackReference(value = "foodItem-orderFoodItems")
     private FoodItem foodItem;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

@@ -61,7 +61,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public Restaurant addFoodItems(Long restaurantId, List<FoodItem> foodItems) {
+    public Restaurant addFoodItems(Long restaurantId, @org.jetbrains.annotations.NotNull List<FoodItem> foodItems) {
         Restaurant restaurant = findById(restaurantId);
         log.debug("Adding Food Items to Restaurant "+ restaurant.getName() + " from Service. ");
         foodItems.stream().forEach(foodItem -> {
