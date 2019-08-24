@@ -4,11 +4,13 @@ import com.finalassessment.ubinge.exception.DeliveryGuyNotFoundException;
 import com.finalassessment.ubinge.model.DeliveryGuy;
 import com.finalassessment.ubinge.repository.DeliveryGuyRepository;
 import com.finalassessment.ubinge.service.DeliveryGuyService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class DeliveryGuyServiceImpl implements DeliveryGuyService {
     private DeliveryGuyRepository deliveryGuyRepository;
@@ -20,31 +22,37 @@ public class DeliveryGuyServiceImpl implements DeliveryGuyService {
 
     @Override
     public List<DeliveryGuy> findAll() {
+        log.debug("Returning Delivery Guy(s) from Service");
         return deliveryGuyRepository.findAll();
     }
 
     @Override
     public DeliveryGuy findById(Long deliveryGuyId) {
+        log.debug("Returning Delivery Guy by Id from Service");
         return deliveryGuyRepository.findById(deliveryGuyId).orElseThrow(() -> new DeliveryGuyNotFoundException(deliveryGuyId));
     }
 
     @Override
     public DeliveryGuy save(DeliveryGuy newDeliveryGuy) {
+        log.debug("Saving Delivery Guy from Service");
         return deliveryGuyRepository.save(newDeliveryGuy);
     }
 
     @Override
     public DeliveryGuy update(DeliveryGuy deliveryGuy, Long deliveryGuyId) {
+        log.debug("Updating Delivery Guy from Service");
         return null;
     }
 
     @Override
     public void delete(DeliveryGuy deliveryGuy) {
+        log.debug("Deleting Delivery Guy from Service");
         deliveryGuyRepository.delete(deliveryGuy);
     }
 
     @Override
     public void deleteById(Long deliveryGuyId) {
+        log.debug("Updating Delivery Guy from Service");
         deliveryGuyRepository.deleteById(deliveryGuyId);
     }
 }
