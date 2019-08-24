@@ -1,5 +1,6 @@
 package com.finalassessment.ubinge.controller;
 
+import com.finalassessment.ubinge.model.Restaurant;
 import com.finalassessment.ubinge.model.RestaurantOwner;
 import com.finalassessment.ubinge.service.RestaurantOwnerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,11 @@ public class RestaurantOwnerController {
     @PostMapping(value = "/restaurantowners")
     public RestaurantOwner saveRestaurantOwner(@RequestBody RestaurantOwner restaurantOwner) {
         return  restaurantOwnerService.save(restaurantOwner);
+    }
+
+    @PostMapping(value = "/restaurantowners/{restaurantOwnerId}/restaurants")
+    public RestaurantOwner saveRestaurantsByRestaurantId(@PathVariable Long restaurantOwnerId, @RequestBody List<Restaurant> restaurants) {
+        return restaurantOwnerService.saveRestaurants(restaurantOwnerId, restaurants);
     }
 
     @PutMapping(value = "/restaurantowners/{restaurantOwnerId}")
