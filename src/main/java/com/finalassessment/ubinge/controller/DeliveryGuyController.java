@@ -27,8 +27,8 @@ public class DeliveryGuyController {
     }
 
     @PostMapping(value = "/deliveryguys")
-    public DeliveryGuy saveDeliveryGuy(@RequestBody DeliveryGuy deliveryGuyId) {
-        return  deliveryGuyService.save(deliveryGuyId);
+    public DeliveryGuy saveDeliveryGuy(@RequestBody DeliveryGuy deliveryGuy) {
+        return  deliveryGuyService.save(deliveryGuy);
     }
 
     @PutMapping(value = "/deliveryguys/{deliveryGuyId}")

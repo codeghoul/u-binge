@@ -27,8 +27,8 @@ public class RestaurantOwnerController {
     }
 
     @PostMapping(value = "/restaurantowners")
-    public RestaurantOwner saveRestaurantOwner(@RequestBody RestaurantOwner restaurantOwnerId) {
-        return  restaurantOwnerService.save(restaurantOwnerId);
+    public RestaurantOwner saveRestaurantOwner(@RequestBody RestaurantOwner restaurantOwner) {
+        return  restaurantOwnerService.save(restaurantOwner);
     }
 
     @PutMapping(value = "/restaurantowners/{restaurantOwnerId}")
