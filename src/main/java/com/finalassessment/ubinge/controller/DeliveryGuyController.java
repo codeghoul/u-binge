@@ -41,7 +41,7 @@ public class DeliveryGuyController {
         deliveryGuyService.delete(deliveryGuy);
     }
 
-    @DeleteMapping(value = "/deliveryGuys/{deliveryGuyId}")
+    @DeleteMapping(value = "/deliveryguys/{deliveryGuyId}")
     public void deleteDeliveryGuyById(@PathVariable Long deliveryGuyId) {
         deliveryGuyService.deleteById(deliveryGuyId);
     }
