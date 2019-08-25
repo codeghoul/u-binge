@@ -1,6 +1,7 @@
 package com.finalassessment.ubinge.controller;
 
 import com.finalassessment.ubinge.model.FoodItem;
+import com.finalassessment.ubinge.model.Order;
 import com.finalassessment.ubinge.model.Restaurant;
 import com.finalassessment.ubinge.service.RestaurantService;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,11 @@ public class RestaurantController {
     public Restaurant getRestaurant(@PathVariable Long restaurantId) {
         log.debug("Getting Restaurant by id.");
         return restaurantService.findById(restaurantId);
+    }
+
+    @GetMapping(value = "/restaurants/{restaurantId}/orders")
+    public List<Order> getRestaurantOrders(@PathVariable Long restaurantId) {
+        return restaurantService.getRestaurantOrders(restaurantId);
     }
 
 //    @PostMapping(value = "/restaurants")

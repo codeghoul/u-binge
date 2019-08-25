@@ -2,6 +2,7 @@ package com.finalassessment.ubinge.service.impl;
 
 import com.finalassessment.ubinge.exception.DeliveryGuyNotFoundException;
 import com.finalassessment.ubinge.model.DeliveryGuy;
+import com.finalassessment.ubinge.model.Order;
 import com.finalassessment.ubinge.repository.DeliveryGuyRepository;
 import com.finalassessment.ubinge.service.DeliveryGuyService;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -54,5 +56,11 @@ public class DeliveryGuyServiceImpl implements DeliveryGuyService {
     public void deleteById(Long deliveryGuyId) {
         log.debug("Updating Delivery Guy from Service");
         deliveryGuyRepository.deleteById(deliveryGuyId);
+    }
+
+    @Override
+    public List<Order> getDeliveryGuyOrders(Long deliveryGuyId) {
+        DeliveryGuy deliveryGuy = deliveryGuyRepository.findById(deliveryGuyId).orElseThrow(() -> new DeliveryGuyNotFoundException(deliveryGuyId));
+        return deliveryGuy.getOrders().stream().collect(Collectors.toList());
     }
 }

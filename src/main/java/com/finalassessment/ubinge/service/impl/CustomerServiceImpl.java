@@ -2,6 +2,7 @@ package com.finalassessment.ubinge.service.impl;
 
 import com.finalassessment.ubinge.exception.CustomerNotFoundException;
 import com.finalassessment.ubinge.model.Customer;
+import com.finalassessment.ubinge.model.Order;
 import com.finalassessment.ubinge.repository.CustomerRepository;
 import com.finalassessment.ubinge.service.CustomerService;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -54,5 +56,11 @@ public class CustomerServiceImpl implements CustomerService {
     public void deleteById(Long customerId) {
         log.debug("Deleting Customer by Id from Service");
         customerRepository.deleteById(customerId);
+    }
+
+    @Override
+    public List<Order> getCustomerOrders(Long customerId) {
+        Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));
+        return customer.getOrders().stream().collect(Collectors.toList());
     }
 }

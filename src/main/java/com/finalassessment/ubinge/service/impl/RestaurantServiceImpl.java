@@ -2,6 +2,7 @@ package com.finalassessment.ubinge.service.impl;
 
 import com.finalassessment.ubinge.exception.RestaurantNotFoundException;
 import com.finalassessment.ubinge.model.FoodItem;
+import com.finalassessment.ubinge.model.Order;
 import com.finalassessment.ubinge.model.Restaurant;
 import com.finalassessment.ubinge.repository.FoodItemRepository;
 import com.finalassessment.ubinge.repository.RestaurantRepository;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -78,5 +80,11 @@ public class RestaurantServiceImpl implements RestaurantService {
         List<FoodItem> foodItems = foodItemRepository.findAllById(foodItemIds);
         foodItemRepository.deleteAll(foodItems);
         return restaurant;
+    }
+
+    @Override
+    public List<Order> getRestaurantOrders(Long restaurantId) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new RestaurantNotFoundException(restaurantId));
+        return restaurant.getOrders().stream().collect(Collectors.toList());
     }
 }

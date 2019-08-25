@@ -1,6 +1,7 @@
 package com.finalassessment.ubinge.controller;
 
 import com.finalassessment.ubinge.model.Customer;
+import com.finalassessment.ubinge.model.Order;
 import com.finalassessment.ubinge.service.CustomerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +26,10 @@ public class CustomerController {
         return customerService.findAll();
     }
 
-    @GetMapping(value = "/customers/{customer_id}")
-    public Customer getCustomer(@PathVariable Long customer_id) {
+    @GetMapping(value = "/customers/{customerId}")
+    public Customer getCustomer(@PathVariable Long customerId) {
         log.debug("Getting Customers By Id.");
-        return customerService.findById(customer_id);
+        return customerService.findById(customerId);
     }
 
     @PostMapping(value = "/customers")
@@ -37,10 +38,10 @@ public class CustomerController {
         return  customerService.save(customer);
     }
 
-    @PutMapping(value = "/customers/{customer_id}")
-    public Customer updateCustomer(@RequestBody Customer customer, @PathVariable Long customer_id) {
+    @PutMapping(value = "/customers/{customerId}")
+    public Customer updateCustomer(@RequestBody Customer customer, @PathVariable Long customerId) {
         log.debug("Updating Customer.");
-        return customerService.update(customer, customer_id);
+        return customerService.update(customer, customerId);
     }
 
     @DeleteMapping(value = "/customers")
@@ -49,9 +50,14 @@ public class CustomerController {
         customerService.delete(customer);
     }
 
-    @DeleteMapping(value = "/customers/{customer_id}")
-    public void deleteCustomerById(@PathVariable Long customer_id) {
+    @DeleteMapping(value = "/customers/{customerId}")
+    public void deleteCustomerById(@PathVariable Long customerId) {
         log.debug("Deleting Customer By Id.");
-        customerService.deleteById(customer_id);
+        customerService.deleteById(customerId);
+    }
+
+    @GetMapping(value = "/customers/{customerId}/orders")
+    public List<Order> getCustomerOrders(@PathVariable Long customerId) {
+        return customerService.getCustomerOrders(customerId);
     }
 }

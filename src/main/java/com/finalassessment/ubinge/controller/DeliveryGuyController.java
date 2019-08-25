@@ -1,6 +1,7 @@
 package com.finalassessment.ubinge.controller;
 
 import com.finalassessment.ubinge.model.DeliveryGuy;
+import com.finalassessment.ubinge.model.Order;
 import com.finalassessment.ubinge.service.DeliveryGuyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,5 +53,10 @@ public class DeliveryGuyController {
     public void deleteDeliveryGuyById(@PathVariable Long deliveryGuyId) {
         log.debug("Deleting Delivery Guy by id.");
         deliveryGuyService.deleteById(deliveryGuyId);
+    }
+
+    @GetMapping("/deliveryguys/{deliveryGuyId}/orders")
+    public List<Order> getDeliveryGuyOrders(@PathVariable Long deliveryGuyId) {
+        return deliveryGuyService.getDeliveryGuyOrders(deliveryGuyId);
     }
 }
