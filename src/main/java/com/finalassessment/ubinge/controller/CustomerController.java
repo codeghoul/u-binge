@@ -5,13 +5,12 @@ import com.finalassessment.ubinge.model.Order;
 import com.finalassessment.ubinge.service.CustomerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Slf4j
-@Controller
+@RestController
 public class CustomerController {
     private CustomerService customerService;
 
