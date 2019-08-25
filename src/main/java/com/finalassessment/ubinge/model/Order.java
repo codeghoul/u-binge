@@ -34,11 +34,9 @@ public class Order extends BaseEntity {
     private LocalDateTime timestamp;
 
     @Column
-    @Enumerated(EnumType.STRING)
     private PaymentMode paymentMode;
 
     @Column
-    @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
     @Column

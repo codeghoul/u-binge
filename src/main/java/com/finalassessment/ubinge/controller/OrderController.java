@@ -23,6 +23,7 @@ public class OrderController {
     public Order createOrder(@RequestBody OrderVO orderVO) {
         System.out.println(orderVO);
         log.debug(String.valueOf(orderVO));
+        //TODO OrderFoodItem json is empty??.
         return orderService.createOrder(orderVO);
     }
 }
