@@ -19,21 +19,6 @@ public class OrderVO {
     @Enumerated(EnumType.STRING)
     private PaymentMode paymentMode;
 
-//    @Enumerated(EnumType.STRING)
-//    private OrderStatus orderStatus;
-
     private LocalDateTime timestamp;
     private Double totalPrice;
-
-    @Override
-    public String toString() {
-        return "OrderVO{" +
-                "customerId=" + customerId +
-                ", restaurantId=" + restaurantId +
-                ", orderFoodItemVos=" + orderFoodItemVos +
-                ", paymentMode=" + paymentMode +
-                ", timestamp=" + timestamp +
-                ", totalPrice=" + totalPrice +
-                '}';
-    }
 }

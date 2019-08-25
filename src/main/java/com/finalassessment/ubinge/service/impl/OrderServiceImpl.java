@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -77,27 +78,35 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order createOrder(OrderVO orderVO) {
+        log.debug("Create new order.");
         Long customerId = orderVO.getCustomerId();
         Long restaurantId = orderVO.getRestaurantId();
-        Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));
-        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new RestaurantNotFoundException(restaurantId));
+
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException(customerId));
+
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new RestaurantNotFoundException(restaurantId));
+
         Order order = new Order();
         order.setCustomer(customer);
         order.setRestaurant(restaurant);
-        order.setDeliveryGuy(null);
+        order.setDeliveryGuy(getDeliveryGuy());
         order.setOrderStatus(OrderStatus.APPROVED);
         order.setPaymentMode(orderVO.getPaymentMode());
         order.setTimestamp(LocalDateTime.now());
         order.setTotalPrice(orderVO.getTotalPrice());
 
-        List<OrderFoodItem> orderFoodItems = orderVO.getOrderFoodItemVos().stream().map(orderFoodItemVo -> orderFoodVoConverter(orderFoodItemVo)).collect(Collectors.toList());
+        List<OrderFoodItem> orderFoodItems = orderVO.getOrderFoodItemVos().stream()
+                .map(orderFoodItemVo -> orderFoodVoConverter(orderFoodItemVo)).collect(Collectors.toList());
         orderFoodItems.forEach(orderFoodItem -> orderFoodItem.setOrder(order));
-        orderFoodItemRepository.saveAll(orderFoodItems);
 
+        orderFoodItemRepository.saveAll(orderFoodItems);
         return orderRepository.save(order);
     }
 
     private OrderFoodItem orderFoodVoConverter(OrderFoodItemVo orderFoodItemVo) {
+        log.debug("Converting orderFoodItemVo into orderFoodItem");
         OrderFoodItem orderFoodItem = new OrderFoodItem();
         Long foodItemId = orderFoodItemVo.getFoodItemId();
         FoodItem foodItem = foodItemRepository.findById(foodItemId).orElseThrow(() -> new FoodItemNotFoundException(foodItemId));
@@ -105,5 +114,13 @@ public class OrderServiceImpl implements OrderService {
         orderFoodItem.setQuantity(orderFoodItemVo.getQuantity());
         orderFoodItem.setTotalPrice(orderFoodItemVo.getTotalPrice());
         return orderFoodItem;
+    }
+
+    private DeliveryGuy getDeliveryGuy() {
+        // TODO implement this in some non random way.
+        log.debug("Getting a delivery guy.");
+        List<DeliveryGuy> deliveryGuys = deliveryGuyRepository.findAll();
+        Random random = new Random();
+        return deliveryGuys.get(random.nextInt(deliveryGuys.size()));
     }
 }

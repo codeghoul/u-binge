@@ -9,13 +9,4 @@ public class OrderFoodItemVo {
     private Long foodItemId;
     private Integer quantity;
     private Double totalPrice;
-
-    @Override
-    public String toString() {
-        return "OrderFoodItemVo{" +
-                "foodItemId=" + foodItemId +
-                ", quantity=" + quantity +
-                ", totalPrice=" + totalPrice +
-                '}';
-    }
 }
