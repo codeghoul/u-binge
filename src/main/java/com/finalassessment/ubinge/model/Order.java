@@ -2,6 +2,8 @@ package com.finalassessment.ubinge.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.finalassessment.ubinge.constants.OrderStatus;
+import com.finalassessment.ubinge.constants.PaymentMode;
 import lombok.Getter;
 import lombok.Setter;
 

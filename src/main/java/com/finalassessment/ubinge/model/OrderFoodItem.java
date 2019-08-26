@@ -16,7 +16,6 @@ import javax.persistence.Table;
 public class OrderFoodItem extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "food_item_id")
-//    @JsonBackReference(value = "foodItem-orderFoodItems")
     private FoodItem foodItem;
 
     @ManyToOne

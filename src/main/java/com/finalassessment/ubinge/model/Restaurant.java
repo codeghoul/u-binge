@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -21,9 +22,9 @@ public class Restaurant extends GeneralDetails {
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     @JsonManagedReference(value=  "restaurant-foodItems")
-    private Set<FoodItem> foodItems;
+    private Set<FoodItem> foodItems = new HashSet<>();
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     @JsonManagedReference(value = "restaurant-orders")
-    private Set<Order> orders;
+    private Set<Order> orders = new HashSet<>();
 }
