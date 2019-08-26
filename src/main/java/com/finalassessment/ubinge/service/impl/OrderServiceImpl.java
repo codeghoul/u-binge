@@ -7,7 +7,7 @@ import com.finalassessment.ubinge.exception.RestaurantNotFoundException;
 import com.finalassessment.ubinge.model.*;
 import com.finalassessment.ubinge.repository.*;
 import com.finalassessment.ubinge.service.OrderService;
-import com.finalassessment.ubinge.vo.OrderFoodItemVo;
+import com.finalassessment.ubinge.vo.OrderFoodItemVO;
 import com.finalassessment.ubinge.vo.OrderVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,15 +99,15 @@ public class OrderServiceImpl implements OrderService {
 
         orderRepository.save(order);
 
-        List<OrderFoodItem> orderFoodItems = orderVO.getOrderFoodItemVos().stream()
-                .map(orderFoodItemVo -> orderFoodVoConverter(orderFoodItemVo)).collect(Collectors.toList());
+        List<OrderFoodItem> orderFoodItems = orderVO.getOrderFoodItemVOS().stream()
+                .map(orderFoodItemVO -> orderFoodVoConverter(orderFoodItemVO)).collect(Collectors.toList());
         orderFoodItems.forEach(orderFoodItem -> orderFoodItem.setOrder(order));
 
         orderFoodItemRepository.saveAll(orderFoodItems);
         return order;
     }
 
-    private OrderFoodItem orderFoodVoConverter(OrderFoodItemVo orderFoodItemVo) {
+    private OrderFoodItem orderFoodVoConverter(OrderFoodItemVO orderFoodItemVo) {
         log.debug("Converting orderFoodItemVo into orderFoodItem");
         OrderFoodItem orderFoodItem = new OrderFoodItem();
         Long foodItemId = orderFoodItemVo.getFoodItemId();

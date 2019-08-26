@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class OrderFoodItemVo {
+public class OrderFoodItemVO {
     private Long foodItemId;
     private Integer quantity;
     private Double totalPrice;

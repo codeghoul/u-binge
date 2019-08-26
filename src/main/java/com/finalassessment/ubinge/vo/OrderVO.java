@@ -12,7 +12,7 @@ import java.util.List;
 public class OrderVO {
     private Long customerId;
     private Long restaurantId;
-    private List<OrderFoodItemVo> orderFoodItemVos;
+    private List<OrderFoodItemVO> orderFoodItemVOS;
 
     private PaymentMode paymentMode;
 
