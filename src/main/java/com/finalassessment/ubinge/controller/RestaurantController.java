@@ -6,6 +6,8 @@ import com.finalassessment.ubinge.model.Restaurant;
 import com.finalassessment.ubinge.service.RestaurantService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,52 +23,33 @@ public class RestaurantController {
     }
 
     @GetMapping(value = "/restaurants")
-    public List<Restaurant> getAllRestaurants() {
+    public ResponseEntity<List<Restaurant>> getAllRestaurants() {
         log.debug("Getting all Restaurants.");
-        return restaurantService.findAll();
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.findAll());
     }
 
     @GetMapping(value = "/restaurants/{restaurantId}")
-    public Restaurant getRestaurant(@PathVariable Long restaurantId) {
+    public ResponseEntity<Restaurant> getRestaurant(@PathVariable Long restaurantId) {
         log.debug("Getting Restaurant by id.");
-        return restaurantService.findById(restaurantId);
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.findById(restaurantId));
     }
 
     @GetMapping(value = "/restaurants/{restaurantId}/orders")
-    public List<Order> getRestaurantOrders(@PathVariable Long restaurantId) {
-        return restaurantService.getRestaurantOrders(restaurantId);
+    public ResponseEntity<List<Order>> getRestaurantOrders(@PathVariable Long restaurantId) {
+        log.debug("Getting all Orders using restaurantId.");
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getRestaurantOrders(restaurantId));
     }
 
-//    @PostMapping(value = "/restaurants")
-//    public Restaurant saveRestaurant(@RequestBody Restaurant restaurant) {
-//        return  restaurantService.save(restaurant);
-//    }
-
-//    @PutMapping(value = "/restaurants/{restaurantId}")
-//    public Restaurant updateRestaurant(@RequestBody Restaurant restaurant, @PathVariable Long restaurantId) {
-//        return restaurantService.update(restaurant, restaurantId);
-//    }
-
-//    @DeleteMapping(value = "/restaurants")
-//    public void deleteRestaurant(@RequestBody Restaurant restaurant) {
-//        restaurantService.delete(restaurant);
-//    }
-
-//    @DeleteMapping(value = "/restaurants/{restaurantId}")
-//    public void deleteRestaurantById(@PathVariable Long restaurantId) {
-//        restaurantService.deleteById(restaurantId);
-//    }
-
     @PostMapping(value = "/restaurants/{restaurantId}/fooditems")
-    public Restaurant addFoodItems(@PathVariable Long restaurantId, @RequestBody List<FoodItem> foodItems) {
+    public ResponseEntity<Restaurant> addFoodItems(@PathVariable Long restaurantId, @RequestBody List<FoodItem> foodItems) {
         log.debug("Adding food items to restaurants.");
-        return restaurantService.addFoodItems(restaurantId, foodItems);
+        return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.addFoodItems(restaurantId, foodItems));
     }
 
     @DeleteMapping(value = "/restaurants/{restaurantId}/fooditems")
-    public Restaurant removeFoodItems(@PathVariable Long restaurantId, @RequestBody List<Long> foodItemIds) {
+    public ResponseEntity<?> removeFoodItems(@PathVariable Long restaurantId, @RequestBody List<Long> foodItemIds) {
         log.debug("Removing food items from restaurants");
-        return restaurantService.removeFoodItems(restaurantId, foodItemIds);
+        restaurantService.removeFoodItems(restaurantId, foodItemIds);
+        return ResponseEntity.noContent().build();
     }
-
 }

@@ -47,9 +47,9 @@ public class DeliveryGuyController {
     }
 
     @PostMapping(value = "/deliveryguys")
-    public DeliveryGuy saveDeliveryGuy(@RequestBody DeliveryGuy deliveryGuy) {
+    public ResponseEntity<DeliveryGuy> saveDeliveryGuy(@RequestBody DeliveryGuy deliveryGuy) {
         log.debug("Saving Delivery Guy.");
-        return deliveryGuyService.save(deliveryGuy);
+        return ResponseEntity.status(HttpStatus.CREATED).body(deliveryGuyService.save(deliveryGuy));
     }
 
     @PutMapping(value = "/deliveryguys/{deliveryGuyId}")
