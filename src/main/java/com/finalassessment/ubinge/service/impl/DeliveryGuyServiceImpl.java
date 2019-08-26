@@ -99,7 +99,7 @@ public class DeliveryGuyServiceImpl implements DeliveryGuyService {
         PaymentMode paymentMode = modification.getPaymentMode();
         OrderStatus orderStatus = modification.getOrderStatus();
 
-        if(paymentMode == null) {
+        if (paymentMode == null) {
             throw new PaymentModeException("Delivery Guy cannot change Payment Mode.");
         }
 

@@ -84,7 +84,7 @@ public class CustomerServiceImpl implements CustomerService {
         log.debug("Getting Customer order by id.");
         Customer customer = findById(customerId);
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
-        if(!order.getCustomer().equals(customer)) {
+        if (!order.getCustomer().equals(customer)) {
             throw new OrderNotFoundException(orderId);
         }
         return order;
@@ -98,11 +98,11 @@ public class CustomerServiceImpl implements CustomerService {
         PaymentMode paymentMode = modification.getPaymentMode();
         OrderStatus orderStatus = modification.getOrderStatus();
 
-        if(paymentMode != null) {
+        if (paymentMode != null) {
             throw new PaymentModeException("Payment mode cannot be changed now.");
         }
 
-        if(!order.getOrderStatus().getDescription().equals("delivered") && orderStatus.getDescription().equals("cancelled")) {
+        if (!order.getOrderStatus().getDescription().equals("delivered") && orderStatus.getDescription().equals("cancelled")) {
             log.debug("Successfully changed order status.");
             order.setOrderStatus(OrderStatus.CANCELLED_BY_USER);
         } else {

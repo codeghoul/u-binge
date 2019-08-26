@@ -42,7 +42,7 @@ public class CustomerController {
     }
 
     @GetMapping(value = "/customer/{customerId}/orders/{orderId}")
-    public ResponseEntity<Order> getCustomerOrderById(@PathVariable Long customerId, @PathVariable Long orderId){
+    public ResponseEntity<Order> getCustomerOrderById(@PathVariable Long customerId, @PathVariable Long orderId) {
         return ResponseEntity.status(HttpStatus.OK).body(customerService.getCustomerOrderById(customerId, orderId));
     }
 

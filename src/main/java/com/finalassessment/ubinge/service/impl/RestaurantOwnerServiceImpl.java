@@ -68,7 +68,7 @@ public class RestaurantOwnerServiceImpl implements RestaurantOwnerService {
     public Restaurant updateRestaurantDetails(GeneralDetailVO generalDetailVO, Long restaurantOwnerId, Long restaurantId) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new RestaurantNotFoundException(restaurantId));
         RestaurantOwner restaurantOwner = findById(restaurantOwnerId);
-        if(!restaurantOwner.getRestaurants().contains(restaurant)) {
+        if (!restaurantOwner.getRestaurants().contains(restaurant)) {
             throw new IllegalArgumentException("You don't own restaurant: " + restaurant.getName());
         }
         restaurant.setName(generalDetailVO.getName());

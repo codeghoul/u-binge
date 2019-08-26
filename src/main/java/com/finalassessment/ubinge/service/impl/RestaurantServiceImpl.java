@@ -102,7 +102,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         log.debug("Getting Customer order by id.");
         Restaurant restaurant = findById(restaurantId);
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
-        if(!order.getCustomer().equals(restaurant)) {
+        if (!order.getCustomer().equals(restaurant)) {
             throw new OrderNotFoundException(orderId);
         }
         return order;
@@ -115,7 +115,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         OrderStatus orderStatus = modification.getOrderStatus();
         PaymentMode paymentMode = modification.getPaymentMode();
 
-        if(paymentMode == null) {
+        if (paymentMode == null) {
             throw new PaymentModeException("Restaurant cannot change Payment Mode.");
         }
 
