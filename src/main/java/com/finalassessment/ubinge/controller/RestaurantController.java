@@ -4,6 +4,7 @@ import com.finalassessment.ubinge.model.FoodItem;
 import com.finalassessment.ubinge.model.Order;
 import com.finalassessment.ubinge.model.Restaurant;
 import com.finalassessment.ubinge.service.RestaurantService;
+import com.finalassessment.ubinge.vo.OrderModificationVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,10 +35,22 @@ public class RestaurantController {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getRestaurantOrders(restaurantId));
     }
 
+    @GetMapping(value = "/restaurants/{restaurantId}/orders/{orderId}")
+    public ResponseEntity<Order> getRestaurantOrderById(@PathVariable Long restaurantId, @PathVariable Long orderId) {
+        log.debug("Getting Restaurant Order By Restaurant Id.");
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getRestaurantOrderById(restaurantId, orderId));
+    }
+
     @PostMapping(value = "/restaurants/{restaurantId}/fooditems")
     public ResponseEntity<Restaurant> addFoodItems(@PathVariable Long restaurantId, @RequestBody List<FoodItem> foodItems) {
         log.debug("Adding food items to restaurants.");
         return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.addFoodItems(restaurantId, foodItems));
+    }
+
+    @PutMapping(value = "/restaurants/{restaurantId}/orders/{orderId}")
+    public ResponseEntity<Order> modifyOrder(@PathVariable Long restaurantId, @PathVariable Long orderId, @RequestBody OrderModificationVO modification) {
+        log.debug("Modifying Customer Order.");
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.modifyOrder(restaurantId, orderId, modification));
     }
 
     @DeleteMapping(value = "/restaurants/{restaurantId}/fooditems")
