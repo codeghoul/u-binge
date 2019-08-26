@@ -102,7 +102,7 @@ public class OrderServiceImpl implements OrderService {
         orderFoodItems.forEach(orderFoodItem -> orderFoodItem.setOrder(order));
 
         orderFoodItemRepository.saveAll(orderFoodItems);
-        return orderRepository.save(order);
+        return orderRepository.saveAndFlush(order);
     }
 
     private OrderFoodItem orderFoodVoConverter(OrderFoodItemVo orderFoodItemVo) {

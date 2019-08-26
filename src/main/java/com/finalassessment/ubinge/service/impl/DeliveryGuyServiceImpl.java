@@ -75,7 +75,7 @@ public class DeliveryGuyServiceImpl implements DeliveryGuyService {
         DeliveryGuy deliveryGuy = findById(deliveryGuyId);
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
 
-        if (!order.getCustomer().equals(deliveryGuy)) {
+        if (!order.getDeliveryGuy().equals(deliveryGuy)) {
             throw new IllegalArgumentException("Order does not belong this Deliver Guy.");
         }
 
@@ -86,7 +86,7 @@ public class DeliveryGuyServiceImpl implements DeliveryGuyService {
     public Order modifyOrder(Long deliveryGuyId, Long orderId, OrderModificationVO modification) {
         Order order = getDeliveryGuyOrderById(deliveryGuyId, orderId);
 
-        if(order.getOrderStatus().getDescription().equals("pickedup") && modification.getOrderStatus().getDescription().equals("delivered")) {
+        if(order.getOrderStatus().getDescription().equals("picked up") && modification.getOrderStatus().getDescription().equals("delivered")) {
             order.setOrderStatus(OrderStatus.DELIVERED);
         } else {
             throw new IllegalArgumentException("Delivery guy cannot change status from " + order.getOrderStatus() + " to" + modification.getOrderStatus());
