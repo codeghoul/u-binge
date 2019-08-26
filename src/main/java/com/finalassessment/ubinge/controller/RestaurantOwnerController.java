@@ -3,6 +3,7 @@ package com.finalassessment.ubinge.controller;
 import com.finalassessment.ubinge.model.Restaurant;
 import com.finalassessment.ubinge.model.RestaurantOwner;
 import com.finalassessment.ubinge.service.RestaurantOwnerService;
+import com.finalassessment.ubinge.vo.GeneralDetailVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,9 +48,9 @@ public class RestaurantOwnerController {
 
 
     @PutMapping(value = "/restaurantowners/{restaurantOwnerId}")
-    public ResponseEntity<RestaurantOwner> updateRestaurantOwner(@RequestBody RestaurantOwner restaurantOwner, @PathVariable Long restaurantOwnerId) {
+    public ResponseEntity<RestaurantOwner> updateRestaurantOwner(@RequestBody GeneralDetailVO generalDetailVO, @PathVariable Long restaurantOwnerId) {
         log.debug("Updating Restaurant Owner by Restaurant id.");
-        return ResponseEntity.status(HttpStatus.OK).body(restaurantOwnerService.update(restaurantOwner, restaurantOwnerId));
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantOwnerService.update(generalDetailVO, restaurantOwnerId));
     }
 
     @DeleteMapping(value = "/restaurantowners")

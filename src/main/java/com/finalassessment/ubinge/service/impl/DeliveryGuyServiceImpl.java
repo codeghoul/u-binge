@@ -8,6 +8,7 @@ import com.finalassessment.ubinge.model.OrderStatus;
 import com.finalassessment.ubinge.repository.DeliveryGuyRepository;
 import com.finalassessment.ubinge.repository.OrderRepository;
 import com.finalassessment.ubinge.service.DeliveryGuyService;
+import com.finalassessment.ubinge.vo.GeneralDetailVO;
 import com.finalassessment.ubinge.vo.OrderModificationVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,9 +47,14 @@ public class DeliveryGuyServiceImpl implements DeliveryGuyService {
         return deliveryGuyRepository.save(newDeliveryGuy);
     }
 
-    public DeliveryGuy update(DeliveryGuy deliveryGuy, Long deliveryGuyId) {
+    @Override
+    public DeliveryGuy update(GeneralDetailVO generalDetailVO, Long deliveryGuyId) {
         log.debug("Updating Delivery Guy from Service");
-        return null;
+        DeliveryGuy deliveryGuy = findById(deliveryGuyId);
+        deliveryGuy.setName(generalDetailVO.getName());
+        deliveryGuy.setEmail(generalDetailVO.getEmail());
+        deliveryGuy.setPhoneNo(generalDetailVO.getPhoneNo());
+        return deliveryGuyRepository.saveAndFlush(deliveryGuy);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.finalassessment.ubinge.controller;
 import com.finalassessment.ubinge.model.Customer;
 import com.finalassessment.ubinge.model.Order;
 import com.finalassessment.ubinge.service.CustomerService;
+import com.finalassessment.ubinge.vo.GeneralDetailVO;
 import com.finalassessment.ubinge.vo.OrderModificationVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,9 +54,9 @@ public class CustomerController {
     }
 
     @PutMapping(value = "/customers/{customerId}")
-    public ResponseEntity<Customer> updateCustomer(@RequestBody Customer customer, @PathVariable Long customerId) {
+    public ResponseEntity<Customer> updateCustomer(@RequestBody GeneralDetailVO generalDetailVO, @PathVariable Long customerId) {
         log.debug("Updating Customer.");
-        return ResponseEntity.status(HttpStatus.OK).body(customerService.update(customer, customerId));
+        return ResponseEntity.status(HttpStatus.OK).body(customerService.update(generalDetailVO, customerId));
     }
 
     @PutMapping(value = "/customers/{customerId}/orders/{orderId}")

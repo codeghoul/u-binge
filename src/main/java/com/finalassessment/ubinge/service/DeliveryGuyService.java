@@ -2,6 +2,7 @@ package com.finalassessment.ubinge.service;
 
 import com.finalassessment.ubinge.model.DeliveryGuy;
 import com.finalassessment.ubinge.model.Order;
+import com.finalassessment.ubinge.vo.GeneralDetailVO;
 import com.finalassessment.ubinge.vo.OrderModificationVO;
 
 import java.util.List;
@@ -12,4 +13,6 @@ public interface DeliveryGuyService extends CrudService<DeliveryGuy, Long> {
     Order getDeliveryGuyOrderById(Long deliveryGuyId, Long orderId);
 
     Order modifyOrder(Long deliveryGuyId, Long orderId, OrderModificationVO modification);
+
+    DeliveryGuy update(GeneralDetailVO generalDetailVO, Long deliveryGuyId);
 }

@@ -8,6 +8,7 @@ import com.finalassessment.ubinge.model.OrderStatus;
 import com.finalassessment.ubinge.repository.CustomerRepository;
 import com.finalassessment.ubinge.repository.OrderRepository;
 import com.finalassessment.ubinge.service.CustomerService;
+import com.finalassessment.ubinge.vo.GeneralDetailVO;
 import com.finalassessment.ubinge.vo.OrderModificationVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,9 +47,14 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository.save(newCustomer);
     }
 
-    public Customer update(Customer customer, Long customerId) {
+    @Override
+    public Customer update(GeneralDetailVO generalDetailVO, Long customerId) {
         log.debug("Updating Customer(s) from Service");
-        return null;
+        Customer customer = findById(customerId);
+        customer.setName(generalDetailVO.getName());
+        customer.setEmail(generalDetailVO.getEmail());
+        customer.setPhoneNo(generalDetailVO.getPhoneNo());
+        return customerRepository.saveAndFlush(customer);
     }
 
     @Override

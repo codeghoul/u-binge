@@ -6,6 +6,7 @@ import com.finalassessment.ubinge.model.RestaurantOwner;
 import com.finalassessment.ubinge.repository.RestaurantOwnerRepository;
 import com.finalassessment.ubinge.repository.RestaurantRepository;
 import com.finalassessment.ubinge.service.RestaurantOwnerService;
+import com.finalassessment.ubinge.vo.GeneralDetailVO;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -45,9 +46,14 @@ public class RestaurantOwnerServiceImpl implements RestaurantOwnerService {
         return restaurantOwnerRepository.save(newRestaurantOwner);
     }
 
-    public RestaurantOwner update(RestaurantOwner restaurantOwner, Long restaurantOwnerId) {
+    @Override
+    public RestaurantOwner update(GeneralDetailVO generalDetailVO, Long restaurantOwnerId) {
         log.debug("Updating Restaurant Owner from Service.");
-        return null;
+        RestaurantOwner restaurantOwner = findById(restaurantOwnerId);
+        restaurantOwner.setName(generalDetailVO.getName());
+        restaurantOwner.setEmail(generalDetailVO.getEmail());
+        restaurantOwner.setPhoneNo(generalDetailVO.getPhoneNo());
+        return restaurantOwnerRepository.saveAndFlush(restaurantOwner);
     }
 
     @Override

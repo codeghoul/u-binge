@@ -3,6 +3,7 @@ package com.finalassessment.ubinge.controller;
 import com.finalassessment.ubinge.model.DeliveryGuy;
 import com.finalassessment.ubinge.model.Order;
 import com.finalassessment.ubinge.service.DeliveryGuyService;
+import com.finalassessment.ubinge.vo.GeneralDetailVO;
 import com.finalassessment.ubinge.vo.OrderModificationVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,9 +54,9 @@ public class DeliveryGuyController {
     }
 
     @PutMapping(value = "/deliveryguys/{deliveryGuyId}")
-    public ResponseEntity<DeliveryGuy> updateDeliveryGuy(@RequestBody DeliveryGuy deliveryGuy, @PathVariable Long deliveryGuyId) {
+    public ResponseEntity<DeliveryGuy> updateDeliveryGuy(@RequestBody GeneralDetailVO generalDetailVO, @PathVariable Long deliveryGuyId) {
         log.debug("Updating Delivery Guy by id.");
-        return ResponseEntity.status(HttpStatus.OK).body(deliveryGuyService.update(deliveryGuy, deliveryGuyId));
+        return ResponseEntity.status(HttpStatus.OK).body(deliveryGuyService.update(generalDetailVO, deliveryGuyId));
     }
 
     @PutMapping(value = "/deliveryguys/{deliveryGuyId}/orders/{orderId}")
