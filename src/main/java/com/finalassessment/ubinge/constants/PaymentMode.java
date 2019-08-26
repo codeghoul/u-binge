@@ -1,4 +1,4 @@
-package com.finalassessment.ubinge.model;
+package com.finalassessment.ubinge.constants;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 

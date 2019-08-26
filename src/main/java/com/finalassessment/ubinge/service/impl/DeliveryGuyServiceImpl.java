@@ -1,10 +1,10 @@
 package com.finalassessment.ubinge.service.impl;
 
+import com.finalassessment.ubinge.constants.OrderStatus;
 import com.finalassessment.ubinge.exception.DeliveryGuyNotFoundException;
 import com.finalassessment.ubinge.exception.OrderNotFoundException;
 import com.finalassessment.ubinge.model.DeliveryGuy;
 import com.finalassessment.ubinge.model.Order;
-import com.finalassessment.ubinge.model.OrderStatus;
 import com.finalassessment.ubinge.repository.DeliveryGuyRepository;
 import com.finalassessment.ubinge.repository.OrderRepository;
 import com.finalassessment.ubinge.service.DeliveryGuyService;

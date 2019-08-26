@@ -1,6 +1,6 @@
 package com.finalassessment.ubinge.converter;
 
-import com.finalassessment.ubinge.model.OrderStatus;
+import com.finalassessment.ubinge.constants.OrderStatus;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

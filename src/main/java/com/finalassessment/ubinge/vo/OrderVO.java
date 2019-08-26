@@ -1,6 +1,6 @@
 package com.finalassessment.ubinge.vo;
 
-import com.finalassessment.ubinge.model.PaymentMode;
+import com.finalassessment.ubinge.constants.PaymentMode;
 import lombok.Getter;
 import lombok.Setter;
 

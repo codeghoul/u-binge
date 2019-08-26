@@ -1,5 +1,6 @@
 package com.finalassessment.ubinge.service.impl;
 
+import com.finalassessment.ubinge.constants.OrderStatus;
 import com.finalassessment.ubinge.exception.CustomerNotFoundException;
 import com.finalassessment.ubinge.exception.FoodItemNotFoundException;
 import com.finalassessment.ubinge.exception.OrderNotFoundException;

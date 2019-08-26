@@ -1,6 +1,6 @@
 package com.finalassessment.ubinge.converter;
 
-import com.finalassessment.ubinge.model.PaymentMode;
+import com.finalassessment.ubinge.constants.PaymentMode;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

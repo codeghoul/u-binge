@@ -1,10 +1,10 @@
 package com.finalassessment.ubinge.service.impl;
 
+import com.finalassessment.ubinge.constants.OrderStatus;
 import com.finalassessment.ubinge.exception.CustomerNotFoundException;
 import com.finalassessment.ubinge.exception.OrderNotFoundException;
 import com.finalassessment.ubinge.model.Customer;
 import com.finalassessment.ubinge.model.Order;
-import com.finalassessment.ubinge.model.OrderStatus;
 import com.finalassessment.ubinge.repository.CustomerRepository;
 import com.finalassessment.ubinge.repository.OrderRepository;
 import com.finalassessment.ubinge.service.CustomerService;
