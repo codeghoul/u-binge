@@ -4,7 +4,10 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Getter
 @Setter
@@ -16,7 +19,7 @@ public class OrderFoodItem extends BaseEntity {
 //    @JsonBackReference(value = "foodItem-orderFoodItems")
     private FoodItem foodItem;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "order_id")
     @JsonBackReference(value = "order-orderFoodItems")
     private Order order;

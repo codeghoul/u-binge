@@ -14,16 +14,16 @@ import java.util.Set;
 @Table(name = "restaurant")
 public class Restaurant extends GeneralDetails {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "restaurant_owner_id")
     @JsonBackReference(value = "restaurantOwner-restaurants")
     private RestaurantOwner restaurantOwner;
 
-    @OneToMany(mappedBy = "restaurant")
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     @JsonManagedReference(value=  "restaurant-foodItems")
     private Set<FoodItem> foodItems;
 
-    @OneToMany(mappedBy = "restaurant")
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     @JsonManagedReference(value = "restaurant-orders")
     private Set<Order> orders;
 }

@@ -42,7 +42,7 @@ public class Order extends BaseEntity {
     @Column
     private Double totalPrice;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     @JsonManagedReference(value = "order-orderFoodItems")
     private Set<OrderFoodItem> orderFoodItems = new HashSet<>();
 }

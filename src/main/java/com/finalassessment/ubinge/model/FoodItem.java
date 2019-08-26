@@ -21,8 +21,4 @@ public class FoodItem extends BaseEntity {
     @JoinColumn(name = "restaurant_id")
     @JsonBackReference(value = "restaurant-foodItems")
     private Restaurant restaurant;
-
-//    @OneToMany(mappedBy = "foodItem")
-//    @JsonManagedReference(value = "foodItem-orderFoodItems")
-//    private Set<OrderFoodItem> orderFoodItems;
 }
