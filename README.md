@@ -7,6 +7,7 @@ A Food Delivery Service api created using Spring Rest, JPA/Hibernate and MySQL a
 
 ## Use Case
 [Link to Lucid Chart Use Case Diagram](https://www.lucidchart.com/invitations/accept/a120c107-5a76-48b7-ae19-04cf8efb6c91)
+[Link to PDF](https://github.com/codeghoul/u-binge/blob/master/U-Binge%20Use%20Case.pdf)
 
 ### This system should handle all the scenarios stated below
 1. List the restraunts and the food items they offer.
@@ -19,3 +20,4 @@ A Food Delivery Service api created using Spring Rest, JPA/Hibernate and MySQL a
 
 ## Entity Relationship Diagram
 [Link to Lucid Chart ERD](https://www.lucidchart.com/invitations/accept/717b2a94-a3b8-44b6-b556-0c4b482b931c)
+[Link to PDF](https://github.com/codeghoul/u-binge/blob/master/U-Binge%20ERD.pdf)
