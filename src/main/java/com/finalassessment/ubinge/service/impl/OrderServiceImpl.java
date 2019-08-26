@@ -97,12 +97,14 @@ public class OrderServiceImpl implements OrderService {
         order.setTimestamp(LocalDateTime.now());
         order.setTotalPrice(orderVO.getTotalPrice());
 
+        orderRepository.save(order);
+
         List<OrderFoodItem> orderFoodItems = orderVO.getOrderFoodItemVos().stream()
                 .map(orderFoodItemVo -> orderFoodVoConverter(orderFoodItemVo)).collect(Collectors.toList());
         orderFoodItems.forEach(orderFoodItem -> orderFoodItem.setOrder(order));
 
         orderFoodItemRepository.saveAll(orderFoodItems);
-        return orderRepository.saveAndFlush(order);
+        return order;
     }
 
     private OrderFoodItem orderFoodVoConverter(OrderFoodItemVo orderFoodItemVo) {
