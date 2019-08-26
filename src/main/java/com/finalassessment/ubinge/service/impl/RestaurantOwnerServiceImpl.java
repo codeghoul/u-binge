@@ -45,7 +45,6 @@ public class RestaurantOwnerServiceImpl implements RestaurantOwnerService {
         return restaurantOwnerRepository.save(newRestaurantOwner);
     }
 
-    @Override
     public RestaurantOwner update(RestaurantOwner restaurantOwner, Long restaurantOwnerId) {
         log.debug("Updating Restaurant Owner from Service.");
         return null;

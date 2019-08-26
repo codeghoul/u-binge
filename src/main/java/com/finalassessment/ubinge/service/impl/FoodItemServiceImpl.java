@@ -38,7 +38,6 @@ public class FoodItemServiceImpl implements FoodItemService {
         return foodItemRepository.save(newFoodItem);
     }
 
-    @Override
     public FoodItem update(FoodItem foodItem, Long foodItemId) {
         log.debug("Updating Food Item from Service.");
         return null;

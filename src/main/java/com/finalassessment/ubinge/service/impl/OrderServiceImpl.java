@@ -58,7 +58,6 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.save(newOrder);
     }
 
-    @Override
     public Order update(Order order, Long orderId) {
         log.debug("Updating Order from Service.");
         return null;

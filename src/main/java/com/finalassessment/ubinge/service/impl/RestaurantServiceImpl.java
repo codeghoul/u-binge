@@ -44,7 +44,6 @@ public class RestaurantServiceImpl implements RestaurantService {
         return restaurantRepository.save(newRestaurant);
     }
 
-    @Override
     public Restaurant update(Restaurant restaurant, Long restaurantId) {
         log.debug("Updating Restaurant from Service.");
         return null;
