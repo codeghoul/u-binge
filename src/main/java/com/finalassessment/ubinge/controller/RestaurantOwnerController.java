@@ -5,6 +5,8 @@ import com.finalassessment.ubinge.model.RestaurantOwner;
 import com.finalassessment.ubinge.service.RestaurantOwnerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,50 +22,54 @@ public class RestaurantOwnerController {
     }
 
     @GetMapping(value = "/restaurantowners")
-    public List<RestaurantOwner> getAllRestaurantOwners() {
+    public ResponseEntity<List<RestaurantOwner>> getAllRestaurantOwners() {
         log.debug("Getting all Restaurants Owners.");
-        return restaurantOwnerService.findAll();
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantOwnerService.findAll());
     }
 
     @GetMapping(value = "/restaurantowners/{restaurantOwnerId}")
-    public RestaurantOwner getRestaurantOwner(@PathVariable Long restaurantOwnerId) {
+    public ResponseEntity<RestaurantOwner> getRestaurantOwner(@PathVariable Long restaurantOwnerId) {
         log.debug("Getting Restaurant Owner by id.");
-        return restaurantOwnerService.findById(restaurantOwnerId);
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantOwnerService.findById(restaurantOwnerId));
     }
 
     @PostMapping(value = "/restaurantowners")
-    public RestaurantOwner saveRestaurantOwner(@RequestBody RestaurantOwner restaurantOwner) {
+    public ResponseEntity<RestaurantOwner> saveRestaurantOwner(@RequestBody RestaurantOwner restaurantOwner) {
         log.debug("Saving Restaurant Owner.");
-        return restaurantOwnerService.save(restaurantOwner);
+        return ResponseEntity.status(HttpStatus.CREATED).body(restaurantOwnerService.save(restaurantOwner));
     }
 
     @PostMapping(value = "/restaurantowners/{restaurantOwnerId}/restaurants")
-    public RestaurantOwner saveRestaurants(@PathVariable Long restaurantOwnerId, @RequestBody List<Restaurant> restaurants) {
+    public ResponseEntity<RestaurantOwner> saveRestaurants(@PathVariable Long restaurantOwnerId, @RequestBody List<Restaurant> restaurants) {
         log.debug("Adding Restaurants to system - Restaurant Owners.");
-        return restaurantOwnerService.saveRestaurants(restaurantOwnerId, restaurants);
+        return ResponseEntity.status(HttpStatus.CREATED).body(restaurantOwnerService.saveRestaurants(restaurantOwnerId, restaurants));
     }
 
-    @DeleteMapping(value = "/restaurantowners/{restaurantOwnerId}/restaurants")
-    public RestaurantOwner deleteRestaurants(@PathVariable Long restaurantOwnerId, @RequestBody List<Long> restaurantIds) {
-        log.debug("Removing Restaurants from system - Restaurant Owners");
-        return restaurantOwnerService.deleteRestaurants(restaurantOwnerId, restaurantIds);
-    }
 
     @PutMapping(value = "/restaurantowners/{restaurantOwnerId}")
-    public RestaurantOwner updateRestaurantOwner(@RequestBody RestaurantOwner restaurantOwner, @PathVariable Long restaurantOwnerId) {
+    public ResponseEntity<RestaurantOwner> updateRestaurantOwner(@RequestBody RestaurantOwner restaurantOwner, @PathVariable Long restaurantOwnerId) {
         log.debug("Updating Restaurant Owner by Restaurant id.");
-        return restaurantOwnerService.update(restaurantOwner, restaurantOwnerId);
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantOwnerService.update(restaurantOwner, restaurantOwnerId));
     }
 
     @DeleteMapping(value = "/restaurantowners")
-    public void deleteRestaurantOwner(@RequestBody RestaurantOwner restaurantOwner) {
+    public ResponseEntity<Object> deleteRestaurantOwner(@RequestBody RestaurantOwner restaurantOwner) {
         log.debug("Deleting Restaurant Owner.");
         restaurantOwnerService.delete(restaurantOwner);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping(value = "/restaurantowners/{restaurantOwnerId}")
-    public void deleteRestaurantOwnerById(@PathVariable Long restaurantOwnerId) {
+    public ResponseEntity<?> deleteRestaurantOwnerById(@PathVariable Long restaurantOwnerId) {
         log.debug("Deleting Restaurant Owner by Restaurant Owner id.");
         restaurantOwnerService.deleteById(restaurantOwnerId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping(value = "/restaurantowners/{restaurantOwnerId}/restaurants")
+    public ResponseEntity<?> deleteRestaurants(@PathVariable Long restaurantOwnerId, @RequestBody List<Long> restaurantIds) {
+        log.debug("Removing Restaurants from system - Restaurant Owners");
+        RestaurantOwner restaurantOwner = restaurantOwnerService.deleteRestaurants(restaurantOwnerId, restaurantIds);
+        return ResponseEntity.noContent().build();
     }
 }
