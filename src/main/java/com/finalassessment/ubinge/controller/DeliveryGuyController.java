@@ -3,6 +3,7 @@ package com.finalassessment.ubinge.controller;
 import com.finalassessment.ubinge.model.DeliveryGuy;
 import com.finalassessment.ubinge.model.Order;
 import com.finalassessment.ubinge.service.DeliveryGuyService;
+import com.finalassessment.ubinge.vo.OrderModificationVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +35,7 @@ public class DeliveryGuyController {
     @PostMapping(value = "/deliveryguys")
     public DeliveryGuy saveDeliveryGuy(@RequestBody DeliveryGuy deliveryGuy) {
         log.debug("Saving Delivery Guy.");
-        return  deliveryGuyService.save(deliveryGuy);
+        return deliveryGuyService.save(deliveryGuy);
     }
 
     @PutMapping(value = "/deliveryguys/{deliveryGuyId}")
@@ -55,8 +56,19 @@ public class DeliveryGuyController {
         deliveryGuyService.deleteById(deliveryGuyId);
     }
 
-    @GetMapping("/deliveryguys/{deliveryGuyId}/orders")
+    @GetMapping(value = "/deliveryguys/{deliveryGuyId}/orders")
     public List<Order> getDeliveryGuyOrders(@PathVariable Long deliveryGuyId) {
         return deliveryGuyService.getDeliveryGuyOrders(deliveryGuyId);
+    }
+
+    @GetMapping(value = "/deliveryguys/{deliveryGuyId}/orders/{orderId}")
+    public Order getDeliveryGuyOrderById(@PathVariable Long deliveryGuyId, @PathVariable Long orderId) {
+        return deliveryGuyService.getDeliveryGuyOrderById(deliveryGuyId, orderId);
+    }
+
+    @PutMapping(value = "/deliveryguys/{deliveryGuyId}/orders/{orderId}")
+    public Order modifyOrder(@PathVariable Long deliveryGuyId, @PathVariable Long orderId, @RequestBody OrderModificationVO modification) {
+        log.debug("Modifying Delivery Guy Order.");
+        return deliveryGuyService.modifyOrder(deliveryGuyId, orderId, modification);
     }
 }

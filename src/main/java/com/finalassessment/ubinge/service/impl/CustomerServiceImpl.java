@@ -71,7 +71,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Order modifyOrder(Long customerId, Long orderId, OrderModificationVO modification) {
+    public Order getCustomerOrderById(Long customerId, Long orderId) {
         Customer customer = findById(customerId);
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
 
@@ -79,9 +79,16 @@ public class CustomerServiceImpl implements CustomerService {
             throw new IllegalArgumentException("Order does not belong to Customer.");
         }
 
+        return order;
+    }
+
+    @Override
+    public Order modifyOrder(Long customerId, Long orderId, OrderModificationVO modification) {
+        Order order = getCustomerOrderById(customerId, orderId);
+
         if(!order.getOrderStatus().getDescription().equals("delivered") && modification.getOrderStatus().getDescription().equals("cancelled")) {
             order.setOrderStatus(OrderStatus.CANCELLED_BY_USER);
         }
-        return orderRepository.save(order);
+        return orderRepository.saveAndFlush(order);
     }
 }

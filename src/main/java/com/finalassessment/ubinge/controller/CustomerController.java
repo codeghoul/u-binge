@@ -62,6 +62,11 @@ public class CustomerController {
         return customerService.getCustomerOrders(customerId);
     }
 
+    @GetMapping(value = "/customer/{customerId}/orders/{orderId}")
+    public Order getCustomerOrderById(@PathVariable Long customerId, @PathVariable Long orderId){
+        return customerService.getCustomerOrderById(customerId, orderId);
+    }
+
     @PutMapping(value = "/customers/{customerId}/orders/{orderId}")
     public Order modifyOrder(@PathVariable Long customerId, @PathVariable Long orderId, @RequestBody OrderModificationVO modification) {
         log.debug("Modifying Customer Order.");

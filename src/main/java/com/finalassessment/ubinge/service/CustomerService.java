@@ -10,4 +10,6 @@ public interface CustomerService extends CrudService<Customer, Long> {
     List<Order> getCustomerOrders(Long customerId);
 
     Order modifyOrder(Long customerId, Long orderId, OrderModificationVO modification);
+
+    Order getCustomerOrderById(Long customerId, Long orderId);
 }
