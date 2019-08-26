@@ -1,8 +1,11 @@
 package com.finalassessment.ubinge.service.impl;
 
 import com.finalassessment.ubinge.constants.OrderStatus;
+import com.finalassessment.ubinge.constants.PaymentMode;
 import com.finalassessment.ubinge.exception.CustomerNotFoundException;
 import com.finalassessment.ubinge.exception.OrderNotFoundException;
+import com.finalassessment.ubinge.exception.OrderStatusException;
+import com.finalassessment.ubinge.exception.PaymentModeException;
 import com.finalassessment.ubinge.model.Customer;
 import com.finalassessment.ubinge.model.Order;
 import com.finalassessment.ubinge.repository.CustomerRepository;
@@ -71,29 +74,41 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<Order> getCustomerOrders(Long customerId) {
+        log.debug("Get all Customer Orders.");
         Customer customer = findById(customerId);
         return customer.getOrders().stream().collect(Collectors.toList());
     }
 
     @Override
     public Order getCustomerOrderById(Long customerId, Long orderId) {
+        log.debug("Getting Customer order by id.");
         Customer customer = findById(customerId);
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
-
         if(!order.getCustomer().equals(customer)) {
-            throw new IllegalArgumentException("Order does not belong to Customer.");
+            throw new OrderNotFoundException(orderId);
         }
-
         return order;
     }
 
     @Override
     public Order modifyOrder(Long customerId, Long orderId, OrderModificationVO modification) {
+        log.debug("Modifying Order.");
         Order order = getCustomerOrderById(customerId, orderId);
 
-        if(!order.getOrderStatus().getDescription().equals("delivered") && modification.getOrderStatus().getDescription().equals("cancelled")) {
-            order.setOrderStatus(OrderStatus.CANCELLED_BY_USER);
+        PaymentMode paymentMode = modification.getPaymentMode();
+        OrderStatus orderStatus = modification.getOrderStatus();
+
+        if(paymentMode != null) {
+            throw new PaymentModeException("Payment mode cannot be changed now.");
         }
-        return orderRepository.saveAndFlush(order);
+
+        if(!order.getOrderStatus().getDescription().equals("delivered") && orderStatus.getDescription().equals("cancelled")) {
+            log.debug("Successfully changed order status.");
+            order.setOrderStatus(OrderStatus.CANCELLED_BY_USER);
+        } else {
+            throw new OrderStatusException("The order you are trying to cancel is already: " + order.getOrderStatus());
+        }
+
+        return orderRepository.save(order);
     }
 }

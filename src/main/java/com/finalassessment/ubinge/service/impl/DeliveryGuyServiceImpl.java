@@ -1,8 +1,11 @@
 package com.finalassessment.ubinge.service.impl;
 
 import com.finalassessment.ubinge.constants.OrderStatus;
+import com.finalassessment.ubinge.constants.PaymentMode;
 import com.finalassessment.ubinge.exception.DeliveryGuyNotFoundException;
 import com.finalassessment.ubinge.exception.OrderNotFoundException;
+import com.finalassessment.ubinge.exception.OrderStatusException;
+import com.finalassessment.ubinge.exception.PaymentModeException;
 import com.finalassessment.ubinge.model.DeliveryGuy;
 import com.finalassessment.ubinge.model.Order;
 import com.finalassessment.ubinge.repository.DeliveryGuyRepository;
@@ -71,17 +74,19 @@ public class DeliveryGuyServiceImpl implements DeliveryGuyService {
 
     @Override
     public List<Order> getDeliveryGuyOrders(Long deliveryGuyId) {
+        log.debug("Getting all Delivery Guy Order(s)");
         DeliveryGuy deliveryGuy = deliveryGuyRepository.findById(deliveryGuyId).orElseThrow(() -> new DeliveryGuyNotFoundException(deliveryGuyId));
         return deliveryGuy.getOrders().stream().collect(Collectors.toList());
     }
 
     @Override
     public Order getDeliveryGuyOrderById(Long deliveryGuyId, Long orderId) {
+        log.debug("Getting Orders by Delivery Guy Id.");
         DeliveryGuy deliveryGuy = findById(deliveryGuyId);
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
 
         if (!order.getDeliveryGuy().equals(deliveryGuy)) {
-            throw new IllegalArgumentException("Order does not belong this Deliver Guy.");
+            throw new OrderNotFoundException(orderId);
         }
 
         return order;
@@ -91,10 +96,17 @@ public class DeliveryGuyServiceImpl implements DeliveryGuyService {
     public Order modifyOrder(Long deliveryGuyId, Long orderId, OrderModificationVO modification) {
         Order order = getDeliveryGuyOrderById(deliveryGuyId, orderId);
 
-        if(order.getOrderStatus().getDescription().equals("picked up") && modification.getOrderStatus().getDescription().equals("delivered")) {
+        PaymentMode paymentMode = modification.getPaymentMode();
+        OrderStatus orderStatus = modification.getOrderStatus();
+
+        if(paymentMode == null) {
+            throw new PaymentModeException("Delivery Guy cannot change Payment Mode.");
+        }
+
+        if (order.getOrderStatus().getDescription().equals("picked up") && orderStatus.getDescription().equals("delivered")) {
             order.setOrderStatus(OrderStatus.DELIVERED);
         } else {
-            throw new IllegalArgumentException("Delivery guy cannot change status from " + order.getOrderStatus() + " to" + modification.getOrderStatus());
+            throw new OrderStatusException("Delivery guy cannot change status from " + order.getOrderStatus() + " to" + modification.getOrderStatus());
         }
         return orderRepository.saveAndFlush(order);
     }
