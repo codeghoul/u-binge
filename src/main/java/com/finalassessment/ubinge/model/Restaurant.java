@@ -21,7 +21,7 @@ public class Restaurant extends GeneralDetails {
     private RestaurantOwner restaurantOwner;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
-    @JsonManagedReference(value=  "restaurant-foodItems")
+    @JsonManagedReference(value = "restaurant-foodItems")
     private Set<FoodItem> foodItems = new HashSet<>();
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)

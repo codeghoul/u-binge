@@ -1,8 +1,7 @@
 package com.finalassessment.ubinge.exception;
 
-public class CustomerNotFoundException extends IllegalArgumentException{
-    private Long customerId;
+public class CustomerNotFoundException extends IllegalArgumentException {
     public CustomerNotFoundException(Long customerId) {
-        this.customerId = customerId;
+        super("No Customer with Id: " + customerId);
     }
 }
