@@ -106,7 +106,7 @@ public class DeliveryGuyServiceImpl implements DeliveryGuyService {
         if (order.getOrderStatus().getDescription().equals("picked up") && orderStatus.getDescription().equals("delivered")) {
             order.setOrderStatus(OrderStatus.DELIVERED);
         } else {
-            throw new OrderStatusException("Delivery guy cannot change status from " + order.getOrderStatus() + " to" + modification.getOrderStatus());
+            throw new OrderStatusException("Delivery guy cannot change status from " + order.getOrderStatus() + " to " + modification.getOrderStatus());
         }
         return orderRepository.saveAndFlush(order);
     }
