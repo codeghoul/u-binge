@@ -1,10 +1,7 @@
 package com.finalassessment.ubinge.service.impl;
 
 import com.finalassessment.ubinge.constants.OrderStatus;
-import com.finalassessment.ubinge.exception.CustomerNotFoundException;
-import com.finalassessment.ubinge.exception.FoodItemNotFoundException;
-import com.finalassessment.ubinge.exception.OrderNotFoundException;
-import com.finalassessment.ubinge.exception.RestaurantNotFoundException;
+import com.finalassessment.ubinge.exception.*;
 import com.finalassessment.ubinge.model.*;
 import com.finalassessment.ubinge.repository.*;
 import com.finalassessment.ubinge.service.OrderService;
@@ -78,7 +75,34 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order createOrder(OrderVO orderVO) {
+        //TODO: break create order into multi small modules. If possible move error throwing in controller.
         log.debug("Create new order.");
+        Order order = toOrder(orderVO);
+        orderRepository.save(order);
+
+        List<OrderFoodItem> orderFoodItems = orderVO.getOrderFoodItemVOS().stream()
+                .map(orderFoodItemVO -> toOrderFood(orderFoodItemVO)).collect(Collectors.toList());
+
+        Double totalPrice = 0.0;
+
+        for (OrderFoodItem orderFoodItem : orderFoodItems) {
+            totalPrice += orderFoodItem.getTotalPrice();
+        }
+
+        if (totalPrice != orderVO.getTotalPrice()) {
+            throw new PriceMismatchException("Total Price for this order should be " + totalPrice + " but found " + orderVO.getTotalPrice());
+        }
+
+        order.setTotalPrice(totalPrice);
+
+        orderFoodItems.forEach(orderFoodItem -> orderFoodItem.setOrder(order));
+
+
+        orderFoodItemRepository.saveAll(orderFoodItems);
+        return order;
+    }
+
+    private Order toOrder(OrderVO orderVO) {
         Long customerId = orderVO.getCustomerId();
         Long restaurantId = orderVO.getRestaurantId();
 
@@ -95,26 +119,22 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderStatus(OrderStatus.APPROVED);
         order.setPaymentMode(orderVO.getPaymentMode());
         order.setTimestamp(LocalDateTime.now());
-        order.setTotalPrice(orderVO.getTotalPrice());
 
-        orderRepository.save(order);
-
-        List<OrderFoodItem> orderFoodItems = orderVO.getOrderFoodItemVOS().stream()
-                .map(orderFoodItemVO -> orderFoodVoConverter(orderFoodItemVO)).collect(Collectors.toList());
-        orderFoodItems.forEach(orderFoodItem -> orderFoodItem.setOrder(order));
-
-        orderFoodItemRepository.saveAll(orderFoodItems);
         return order;
     }
 
-    private OrderFoodItem orderFoodVoConverter(OrderFoodItemVO orderFoodItemVo) {
+    private OrderFoodItem toOrderFood(OrderFoodItemVO orderFoodItemVo) {
         log.debug("Converting orderFoodItemVo into orderFoodItem");
         OrderFoodItem orderFoodItem = new OrderFoodItem();
         Long foodItemId = orderFoodItemVo.getFoodItemId();
         FoodItem foodItem = foodItemRepository.findById(foodItemId).orElseThrow(() -> new FoodItemNotFoundException(foodItemId));
         orderFoodItem.setFoodItem(foodItem);
         orderFoodItem.setQuantity(orderFoodItemVo.getQuantity());
-        orderFoodItem.setTotalPrice(orderFoodItemVo.getTotalPrice());
+        Double totalPrice = orderFoodItemVo.getQuantity() * foodItem.getPrice();
+        if (totalPrice != orderFoodItemVo.getTotalPrice()) {
+            throw new PriceMismatchException("Total Price for " + foodItem.getName() + " should be " + totalPrice + " but found " + orderFoodItemVo.getTotalPrice());
+        }
+        orderFoodItem.setTotalPrice(totalPrice);
         return orderFoodItem;
     }
 
