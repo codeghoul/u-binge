@@ -1,5 +1,6 @@
 package com.finalassessment.ubinge.service.impl;
 
+import com.finalassessment.ubinge.exception.RestaurantNotFoundException;
 import com.finalassessment.ubinge.exception.RestaurantOwnerNotFoundException;
 import com.finalassessment.ubinge.model.Restaurant;
 import com.finalassessment.ubinge.model.RestaurantOwner;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -41,6 +43,12 @@ public class RestaurantOwnerServiceImpl implements RestaurantOwnerService {
     }
 
     @Override
+    public List<Restaurant> findAllRestaurants(Long restaurantOwnerId) {
+        RestaurantOwner restaurantOwner = findById(restaurantOwnerId);
+        return restaurantOwner.getRestaurants().stream().collect(Collectors.toList());
+    }
+
+    @Override
     public RestaurantOwner save(RestaurantOwner newRestaurantOwner) {
         log.debug("Saving Restaurant Owner from Service.");
         return restaurantOwnerRepository.save(newRestaurantOwner);
@@ -55,6 +63,20 @@ public class RestaurantOwnerServiceImpl implements RestaurantOwnerService {
         restaurantOwner.setPhoneNo(generalDetailVO.getPhoneNo());
         return restaurantOwnerRepository.saveAndFlush(restaurantOwner);
     }
+
+    @Override
+    public Restaurant updateRestaurantDetails(GeneralDetailVO generalDetailVO, Long restaurantOwnerId, Long restaurantId) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new RestaurantNotFoundException(restaurantId));
+        RestaurantOwner restaurantOwner = findById(restaurantOwnerId);
+        if(!restaurantOwner.getRestaurants().contains(restaurant)) {
+            throw new IllegalArgumentException("You don't own restaurant: " + restaurant.getName());
+        }
+        restaurant.setName(generalDetailVO.getName());
+        restaurant.setEmail(generalDetailVO.getEmail());
+        restaurant.setPhoneNo(generalDetailVO.getPhoneNo());
+        return restaurantRepository.saveAndFlush(restaurant);
+    }
+
 
     @Override
     public void delete(RestaurantOwner restaurantOwner) {

@@ -34,6 +34,12 @@ public class RestaurantOwnerController {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantOwnerService.findById(restaurantOwnerId));
     }
 
+    @GetMapping(value = "/restaurantowners/{restaurantOwnerId}/restaurants")
+    public ResponseEntity<List<Restaurant>> getRestaurantOwnerRestaurants(@PathVariable Long restaurantOwnerId) {
+        log.debug("Getting Restaurant Owner by id.");
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantOwnerService.findAllRestaurants(restaurantOwnerId));
+    }
+
     @PostMapping(value = "/restaurantowners")
     public ResponseEntity<RestaurantOwner> saveRestaurantOwner(@RequestBody RestaurantOwner restaurantOwner) {
         log.debug("Saving Restaurant Owner.");
@@ -51,6 +57,12 @@ public class RestaurantOwnerController {
     public ResponseEntity<RestaurantOwner> updateRestaurantOwner(@RequestBody GeneralDetailVO generalDetailVO, @PathVariable Long restaurantOwnerId) {
         log.debug("Updating Restaurant Owner by Restaurant id.");
         return ResponseEntity.status(HttpStatus.OK).body(restaurantOwnerService.update(generalDetailVO, restaurantOwnerId));
+    }
+
+    @PutMapping(value = "/restaurantowners/{restaurantOwnerId}/restaurants/{restaurantId}")
+    public ResponseEntity<Restaurant> updateRestaurantDetails(@RequestBody GeneralDetailVO generalDetailVO, @PathVariable Long restaurantOwnerId, @PathVariable Long restaurantId) {
+        log.debug("Updating Restaurant Owner by Restaurant id.");
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantOwnerService.updateRestaurantDetails(generalDetailVO, restaurantOwnerId, restaurantId));
     }
 
     @DeleteMapping(value = "/restaurantowners")

@@ -12,4 +12,8 @@ public interface RestaurantOwnerService extends CrudService<RestaurantOwner, Lon
     RestaurantOwner deleteRestaurants(Long restaurantOwnerId, List<Long> restaurantIds);
 
     RestaurantOwner update(GeneralDetailVO generalDetailVO, Long restaurantOwnerId);
+
+    Restaurant updateRestaurantDetails(GeneralDetailVO generalDetailVO, Long restaurantOwnerId, Long restaurantId);
+
+    List<Restaurant> findAllRestaurants(Long restaurantOwnerId);
 }
