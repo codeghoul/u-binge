@@ -1,10 +1,14 @@
 package com.finalassessment.ubinge.service.impl;
 
 import com.finalassessment.ubinge.exception.CustomerNotFoundException;
+import com.finalassessment.ubinge.exception.OrderNotFoundException;
 import com.finalassessment.ubinge.model.Customer;
 import com.finalassessment.ubinge.model.Order;
+import com.finalassessment.ubinge.model.OrderStatus;
 import com.finalassessment.ubinge.repository.CustomerRepository;
+import com.finalassessment.ubinge.repository.OrderRepository;
 import com.finalassessment.ubinge.service.CustomerService;
+import com.finalassessment.ubinge.vo.OrderModificationVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,10 +20,12 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CustomerServiceImpl implements CustomerService {
     private CustomerRepository customerRepository;
+    private OrderRepository orderRepository;
 
     @Autowired
-    public CustomerServiceImpl(CustomerRepository customerRepository) {
+    public CustomerServiceImpl(CustomerRepository customerRepository, OrderRepository orderRepository) {
         this.customerRepository = customerRepository;
+        this.orderRepository = orderRepository;
     }
 
     @Override
@@ -60,7 +66,22 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<Order> getCustomerOrders(Long customerId) {
-        Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));
+        Customer customer = findById(customerId);
         return customer.getOrders().stream().collect(Collectors.toList());
+    }
+
+    @Override
+    public Order modifyOrder(Long customerId, Long orderId, OrderModificationVO modification) {
+        Customer customer = findById(customerId);
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
+
+        if(!order.getCustomer().equals(customer)) {
+            throw new IllegalArgumentException("Order does not belong to Customer.");
+        }
+
+        if(!order.getOrderStatus().getDescription().equals("delivered") && modification.getOrderStatus().getDescription().equals("cancelled")) {
+            order.setOrderStatus(OrderStatus.CANCELLED_BY_USER);
+        }
+        return orderRepository.save(order);
     }
 }

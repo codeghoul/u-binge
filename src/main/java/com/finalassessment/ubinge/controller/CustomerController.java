@@ -3,6 +3,7 @@ package com.finalassessment.ubinge.controller;
 import com.finalassessment.ubinge.model.Customer;
 import com.finalassessment.ubinge.model.Order;
 import com.finalassessment.ubinge.service.CustomerService;
+import com.finalassessment.ubinge.vo.OrderModificationVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -57,6 +58,13 @@ public class CustomerController {
 
     @GetMapping(value = "/customers/{customerId}/orders")
     public List<Order> getCustomerOrders(@PathVariable Long customerId) {
+        log.debug("Getting Customer Orders.");
         return customerService.getCustomerOrders(customerId);
+    }
+
+    @PutMapping(value = "/customers/{customerId}/orders/{orderId}")
+    public Order modifyOrder(@PathVariable Long customerId, @PathVariable Long orderId, @RequestBody OrderModificationVO modification) {
+        log.debug("Modifying Customer Order.");
+        return customerService.modifyOrder(customerId, orderId, modification);
     }
 }

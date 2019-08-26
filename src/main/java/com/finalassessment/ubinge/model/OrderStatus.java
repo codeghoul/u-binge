@@ -8,6 +8,7 @@ import java.util.Map;
 
 public enum OrderStatus {
     APPROVED("approved"),
+    CANCELLED("cancelled"),
     CANCELLED_BY_USER("user cancelled"),
     CANCELLED_BY_RESTAURANT("restaurant cancelled"),
     PREPARING("preparing"),
