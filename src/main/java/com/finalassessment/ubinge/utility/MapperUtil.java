@@ -1,9 +1,6 @@
 package com.finalassessment.ubinge.utility;
 
-import com.finalassessment.ubinge.dto.CustomerDTO;
-import com.finalassessment.ubinge.dto.FoodItemDTO;
-import com.finalassessment.ubinge.dto.OrderDTO;
-import com.finalassessment.ubinge.dto.OrderFoodItemDTO;
+import com.finalassessment.ubinge.dto.*;
 import com.finalassessment.ubinge.model.*;
 
 import java.util.Set;
@@ -86,5 +83,22 @@ public class MapperUtil {
 
     private static Set<Long> getSetOfId(Set<? extends BaseEntity> objects) {
         return objects.stream().map(object -> ((BaseEntity) object).getId()).collect(Collectors.toSet());
+    }
+
+    public static DeliveryGuyDTO toDeliveryGuyDTO(DeliveryGuy deliveryGuy) {
+        DeliveryGuyDTO deliveryGuyDTO = new DeliveryGuyDTO();
+        deliveryGuyDTO.setId(deliveryGuy.getId());
+        deliveryGuyDTO.setEmail(deliveryGuy.getEmail());
+        deliveryGuyDTO.setName(deliveryGuy.getName());
+        deliveryGuyDTO.setPhoneNo(deliveryGuy.getPhoneNo());
+        return deliveryGuyDTO;
+    }
+
+    public static DeliveryGuy toDeliveryGuy(DeliveryGuyDTO deliveryGuyDTO) {
+        DeliveryGuy deliveryGuy = new DeliveryGuy();
+        deliveryGuy.setName(deliveryGuyDTO.getName());
+        deliveryGuy.setEmail(deliveryGuyDTO.getEmail());
+        deliveryGuy.setPhoneNo(deliveryGuyDTO.getName());
+        return deliveryGuy;
     }
 }

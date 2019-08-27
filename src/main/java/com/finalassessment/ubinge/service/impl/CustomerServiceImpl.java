@@ -50,14 +50,6 @@ public class CustomerServiceImpl implements CustomerService {
         return MapperUtil.toCustomerDTO(customer);
     }
 
-
-    @Override
-    public void delete(CustomerDTO customerDTO) {
-        log.debug("Deleting Customer from Service.");
-        Customer customer = MapperUtil.toCustomer(customerDTO);
-        customerRepository.delete(customer);
-    }
-
     @Override
     public void deleteById(Long customerId) {
         log.debug("Deleting Customer by Id from Service.");

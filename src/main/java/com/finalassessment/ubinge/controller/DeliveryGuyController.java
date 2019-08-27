@@ -1,10 +1,8 @@
 package com.finalassessment.ubinge.controller;
 
-import com.finalassessment.ubinge.model.DeliveryGuy;
-import com.finalassessment.ubinge.model.Order;
+import com.finalassessment.ubinge.dto.DeliveryGuyDTO;
+import com.finalassessment.ubinge.dto.OrderDTO;
 import com.finalassessment.ubinge.service.DeliveryGuyService;
-import com.finalassessment.ubinge.vo.GeneralDetailVO;
-import com.finalassessment.ubinge.vo.OrderModificationVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,53 +22,46 @@ public class DeliveryGuyController {
     }
 
     @GetMapping(value = "/deliveryguys")
-    public ResponseEntity<List<DeliveryGuy>> getAllDeliveryGuys() {
+    public ResponseEntity<List<DeliveryGuyDTO>> getAllDeliveryGuys() {
         log.debug("Getting all Delivery Guys.");
         return ResponseEntity.status(HttpStatus.OK).body(deliveryGuyService.findAll());
     }
 
     @GetMapping(value = "/deliveryguys/{deliveryGuyId}")
-    public ResponseEntity<DeliveryGuy> getDeliveryGuy(@PathVariable Long deliveryGuyId) {
+    public ResponseEntity<DeliveryGuyDTO> getDeliveryGuy(@PathVariable Long deliveryGuyId) {
         log.debug("Getting Delivery Guy by id.");
         return ResponseEntity.status(HttpStatus.OK).body(deliveryGuyService.findById(deliveryGuyId));
     }
 
     @GetMapping(value = "/deliveryguys/{deliveryGuyId}/orders")
-    public ResponseEntity<List<Order>> getDeliveryGuyOrders(@PathVariable Long deliveryGuyId) {
+    public ResponseEntity<List<OrderDTO>> getDeliveryGuyOrders(@PathVariable Long deliveryGuyId) {
         log.debug("Getting Orders assigned to Delivery Guy.");
         return ResponseEntity.status(HttpStatus.OK).body(deliveryGuyService.getDeliveryGuyOrders(deliveryGuyId));
     }
 
     @GetMapping(value = "/deliveryguys/{deliveryGuyId}/orders/{orderId}")
-    public ResponseEntity<Order> getDeliveryGuyOrderById(@PathVariable Long deliveryGuyId, @PathVariable Long orderId) {
+    public ResponseEntity<OrderDTO> getDeliveryGuyOrderById(@PathVariable Long deliveryGuyId, @PathVariable Long orderId) {
         log.debug("Getting Order assigned to Delivery Guy using given OrderId.");
         return ResponseEntity.status(HttpStatus.OK).body(deliveryGuyService.getDeliveryGuyOrderById(deliveryGuyId, orderId));
     }
 
     @PostMapping(value = "/deliveryguys")
-    public ResponseEntity<DeliveryGuy> saveDeliveryGuy(@RequestBody DeliveryGuy deliveryGuy) {
+    public ResponseEntity<DeliveryGuyDTO> saveDeliveryGuy(@RequestBody DeliveryGuyDTO deliveryGuyDTO) {
         log.debug("Saving Delivery Guy.");
-        return ResponseEntity.status(HttpStatus.CREATED).body(deliveryGuyService.save(deliveryGuy));
+        return ResponseEntity.status(HttpStatus.CREATED).body(deliveryGuyService.save(deliveryGuyDTO));
     }
 
     @PutMapping(value = "/deliveryguys/{deliveryGuyId}")
-    public ResponseEntity<DeliveryGuy> updateDeliveryGuy(@RequestBody GeneralDetailVO generalDetailVO, @PathVariable Long deliveryGuyId) {
+    public ResponseEntity<DeliveryGuyDTO> updateDeliveryGuy(@RequestBody DeliveryGuyDTO deliveryGuyDTO, @PathVariable Long deliveryGuyId) {
         log.debug("Updating Delivery Guy by id.");
-        return ResponseEntity.status(HttpStatus.OK).body(deliveryGuyService.update(generalDetailVO, deliveryGuyId));
+        return ResponseEntity.status(HttpStatus.OK).body(deliveryGuyService.update(deliveryGuyDTO, deliveryGuyId));
     }
 
-    @PutMapping(value = "/deliveryguys/{deliveryGuyId}/orders/{orderId}")
-    public ResponseEntity<Order> modifyOrder(@PathVariable Long deliveryGuyId, @PathVariable Long orderId, @RequestBody OrderModificationVO modification) {
-        log.debug("Modifying Delivery Guy Order.");
-        return ResponseEntity.status(HttpStatus.OK).body(deliveryGuyService.modifyOrder(deliveryGuyId, orderId, modification));
-    }
-
-    @DeleteMapping(value = "/deliveryguys")
-    public ResponseEntity<?> deleteDeliveryGuy(@RequestBody DeliveryGuy deliveryGuy) {
-        log.debug("Deleting Delivery Guy.");
-        deliveryGuyService.delete(deliveryGuy);
-        return ResponseEntity.noContent().build();
-    }
+//    @PutMapping(value = "/deliveryguys/{deliveryGuyId}/orders/{orderId}")
+//    public ResponseEntity<Order> modifyOrder(@PathVariable Long deliveryGuyId, @PathVariable Long orderId, @RequestBody OrderModificationVO modification) {
+//        log.debug("Modifying Delivery Guy Order.");
+//        return ResponseEntity.status(HttpStatus.OK).body(deliveryGuyService.modifyOrder(deliveryGuyId, orderId, modification));
+//    }
 
     @DeleteMapping(value = "/deliveryguys/{deliveryGuyId}")
     public ResponseEntity<?> deleteDeliveryGuyById(@PathVariable Long deliveryGuyId) {

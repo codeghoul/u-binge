@@ -1,18 +1,16 @@
 package com.finalassessment.ubinge.service;
 
-import com.finalassessment.ubinge.model.DeliveryGuy;
-import com.finalassessment.ubinge.model.Order;
-import com.finalassessment.ubinge.vo.GeneralDetailVO;
-import com.finalassessment.ubinge.vo.OrderModificationVO;
+import com.finalassessment.ubinge.dto.DeliveryGuyDTO;
+import com.finalassessment.ubinge.dto.OrderDTO;
 
 import java.util.List;
 
-public interface DeliveryGuyService extends CrudService<DeliveryGuy, Long> {
-    List<Order> getDeliveryGuyOrders(Long deliveryGuyId);
+public interface DeliveryGuyService extends CrudService<DeliveryGuyDTO, Long> {
+    List<OrderDTO> getDeliveryGuyOrders(Long deliveryGuyId);
 
-    Order getDeliveryGuyOrderById(Long deliveryGuyId, Long orderId);
+    OrderDTO getDeliveryGuyOrderById(Long deliveryGuyId, Long orderId);
 
-    Order modifyOrder(Long deliveryGuyId, Long orderId, OrderModificationVO modification);
+//    OrderDTO modifyOrder(Long deliveryGuyId, Long orderId, OrderModificationVO modification);
 
-    DeliveryGuy update(GeneralDetailVO generalDetailVO, Long deliveryGuyId);
+    DeliveryGuyDTO update(DeliveryGuyDTO deliveryGuyDTO, Long deliveryGuyId);
 }
