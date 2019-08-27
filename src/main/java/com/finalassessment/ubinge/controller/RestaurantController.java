@@ -1,8 +1,8 @@
 package com.finalassessment.ubinge.controller;
 
-import com.finalassessment.ubinge.model.FoodItem;
-import com.finalassessment.ubinge.model.Order;
-import com.finalassessment.ubinge.model.Restaurant;
+import com.finalassessment.ubinge.dto.FoodItemDTO;
+import com.finalassessment.ubinge.dto.OrderDTO;
+import com.finalassessment.ubinge.dto.RestaurantDTO;
 import com.finalassessment.ubinge.service.RestaurantService;
 import com.finalassessment.ubinge.vo.OrderModificationVO;
 import lombok.extern.slf4j.Slf4j;
@@ -24,31 +24,37 @@ public class RestaurantController {
     }
 
     @GetMapping(value = "/restaurants/{restaurantId}")
-    public ResponseEntity<Restaurant> getRestaurant(@PathVariable Long restaurantId) {
+    public ResponseEntity<RestaurantDTO> getRestaurant(@PathVariable Long restaurantId) {
         log.debug("Getting Restaurant by id.");
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.findById(restaurantId));
     }
 
+    @GetMapping(value = "/restaurants/{restaurantId}/fooditems")
+    public ResponseEntity<List<FoodItemDTO>> getRestaurantFoodItems(@PathVariable Long restaurantId) {
+        log.debug("Getting all FoodItems using restaurantId.");
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getRestaurantFoodItems(restaurantId));
+    }
+
     @GetMapping(value = "/restaurants/{restaurantId}/orders")
-    public ResponseEntity<List<Order>> getRestaurantOrders(@PathVariable Long restaurantId) {
+    public ResponseEntity<List<OrderDTO>> getRestaurantOrders(@PathVariable Long restaurantId) {
         log.debug("Getting all Orders using restaurantId.");
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getRestaurantOrders(restaurantId));
     }
 
     @GetMapping(value = "/restaurants/{restaurantId}/orders/{orderId}")
-    public ResponseEntity<Order> getRestaurantOrderById(@PathVariable Long restaurantId, @PathVariable Long orderId) {
+    public ResponseEntity<OrderDTO> getRestaurantOrderById(@PathVariable Long restaurantId, @PathVariable Long orderId) {
         log.debug("Getting Restaurant Order By Restaurant Id.");
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getRestaurantOrderById(restaurantId, orderId));
     }
 
     @PostMapping(value = "/restaurants/{restaurantId}/fooditems")
-    public ResponseEntity<Restaurant> addFoodItems(@PathVariable Long restaurantId, @RequestBody List<FoodItem> foodItems) {
+    public ResponseEntity<RestaurantDTO> addFoodItems(@PathVariable Long restaurantId, @RequestBody List<FoodItemDTO> foodItemDTOs) {
         log.debug("Adding food items to restaurants.");
-        return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.addFoodItems(restaurantId, foodItems));
+        return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.addFoodItems(restaurantId, foodItemDTOs));
     }
 
     @PutMapping(value = "/restaurants/{restaurantId}/orders/{orderId}")
-    public ResponseEntity<Order> modifyOrder(@PathVariable Long restaurantId, @PathVariable Long orderId, @RequestBody OrderModificationVO modification) {
+    public ResponseEntity<OrderDTO> modifyOrder(@PathVariable Long restaurantId, @PathVariable Long orderId, @RequestBody OrderModificationVO modification) {
         log.debug("Modifying Customer Order.");
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.modifyOrder(restaurantId, orderId, modification));
     }

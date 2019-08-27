@@ -25,15 +25,17 @@ public class MapperUtil {
         return customerDTO;
     }
 
-    public static FoodItem toFoodItem(FoodItemDTO foodItemDTO) {
+    public static FoodItem toFoodItem(FoodItemDTO foodItemDTO, Restaurant restaurant) {
         FoodItem foodItem = new FoodItem();
         foodItem.setName(foodItemDTO.getName());
         foodItem.setPrice(foodItemDTO.getPrice());
+        foodItem.setRestaurant(restaurant);
         return foodItem;
     }
 
     public static FoodItemDTO toFoodItemDTO(FoodItem foodItem) {
         FoodItemDTO foodItemDTO = new FoodItemDTO();
+        foodItemDTO.setId(foodItem.getId());
         foodItemDTO.setName(foodItem.getName());
         foodItemDTO.setPrice(foodItem.getPrice());
         foodItemDTO.setRestaurantId(foodItem.getRestaurant().getId());
@@ -85,6 +87,14 @@ public class MapperUtil {
         return objects.stream().map(object -> ((BaseEntity) object).getId()).collect(Collectors.toSet());
     }
 
+    public static DeliveryGuy toDeliveryGuy(DeliveryGuyDTO deliveryGuyDTO) {
+        DeliveryGuy deliveryGuy = new DeliveryGuy();
+        deliveryGuy.setName(deliveryGuyDTO.getName());
+        deliveryGuy.setEmail(deliveryGuyDTO.getEmail());
+        deliveryGuy.setPhoneNo(deliveryGuyDTO.getName());
+        return deliveryGuy;
+    }
+
     public static DeliveryGuyDTO toDeliveryGuyDTO(DeliveryGuy deliveryGuy) {
         DeliveryGuyDTO deliveryGuyDTO = new DeliveryGuyDTO();
         deliveryGuyDTO.setId(deliveryGuy.getId());
@@ -94,11 +104,22 @@ public class MapperUtil {
         return deliveryGuyDTO;
     }
 
-    public static DeliveryGuy toDeliveryGuy(DeliveryGuyDTO deliveryGuyDTO) {
-        DeliveryGuy deliveryGuy = new DeliveryGuy();
-        deliveryGuy.setName(deliveryGuyDTO.getName());
-        deliveryGuy.setEmail(deliveryGuyDTO.getEmail());
-        deliveryGuy.setPhoneNo(deliveryGuyDTO.getName());
-        return deliveryGuy;
+    public static Restaurant toRestaurant(RestaurantDTO restaurantDTO) {
+        Restaurant restaurant = new Restaurant();
+        restaurant.setName(restaurantDTO.getName());
+        restaurant.setPhoneNo(restaurantDTO.getPhoneNo());
+        restaurant.setEmail(restaurantDTO.getEmail());
+        return restaurant;
+    }
+
+    public static RestaurantDTO toRestaurantDTO(Restaurant restaurant) {
+        RestaurantDTO restaurantDTO = new RestaurantDTO();
+        restaurantDTO.setId(restaurant.getId());
+        restaurantDTO.setName(restaurant.getName());
+        restaurantDTO.setPhoneNo(restaurant.getPhoneNo());
+        restaurantDTO.setEmail(restaurant.getEmail());
+        restaurantDTO.setOrderIds(getSetOfId(restaurant.getOrders()));
+        restaurantDTO.setFoodItemIds(getSetOfId(restaurant.getFoodItems()));
+        return restaurantDTO;
     }
 }

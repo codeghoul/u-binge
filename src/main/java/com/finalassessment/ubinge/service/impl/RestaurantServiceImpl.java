@@ -1,10 +1,9 @@
 package com.finalassessment.ubinge.service.impl;
 
-import com.finalassessment.ubinge.constants.OrderStatus;
-import com.finalassessment.ubinge.constants.PaymentMode;
+import com.finalassessment.ubinge.dto.FoodItemDTO;
+import com.finalassessment.ubinge.dto.OrderDTO;
+import com.finalassessment.ubinge.dto.RestaurantDTO;
 import com.finalassessment.ubinge.exception.OrderNotFoundException;
-import com.finalassessment.ubinge.exception.OrderStatusException;
-import com.finalassessment.ubinge.exception.PaymentModeException;
 import com.finalassessment.ubinge.exception.RestaurantNotFoundException;
 import com.finalassessment.ubinge.model.FoodItem;
 import com.finalassessment.ubinge.model.Order;
@@ -13,6 +12,7 @@ import com.finalassessment.ubinge.repository.FoodItemRepository;
 import com.finalassessment.ubinge.repository.OrderRepository;
 import com.finalassessment.ubinge.repository.RestaurantRepository;
 import com.finalassessment.ubinge.service.RestaurantService;
+import com.finalassessment.ubinge.utility.MapperUtil;
 import com.finalassessment.ubinge.vo.OrderModificationVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,95 +36,102 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public List<Restaurant> findAll() {
-        log.debug("Getting Restaurants from Service.");
-        return restaurantRepository.findAll();
+    public RestaurantDTO addFoodItems(Long restaurantId, List<FoodItemDTO> foodItemDTOs) {
+        Restaurant restaurant = getRestaurant(restaurantId);
+        List<FoodItem> foodItems = foodItemDTOs.stream().map(foodItemDTO -> MapperUtil.toFoodItem(foodItemDTO, restaurant)).collect(Collectors.toList());
+        foodItemRepository.saveAll(foodItems);
+        return MapperUtil.toRestaurantDTO(restaurant);
     }
 
     @Override
-    public Restaurant findById(Long restaurantId) {
-        log.debug("Getting Restaurant By Id from Service.");
-        return restaurantRepository.findById(restaurantId).orElseThrow(() -> new RestaurantNotFoundException(restaurantId));
+    public RestaurantDTO removeFoodItems(Long restaurantId, List<Long> foodItemIds) {
+        Restaurant restaurant = getRestaurant(restaurantId);
+        log.debug("Removing Food Items from Restaurant" + restaurant.getName() + " from Service. ");
+        List<FoodItem> foodItems = foodItemRepository.findAllById(foodItemIds);
+        foodItemRepository.deleteAll(foodItems);
+        return MapperUtil.toRestaurantDTO(restaurant);
     }
 
     @Override
-    public Restaurant save(Restaurant newRestaurant) {
-        log.debug("Saving Restaurant from Service.");
-        return restaurantRepository.save(newRestaurant);
+    public List<OrderDTO> getRestaurantOrders(Long restaurantId) {
+        log.debug("Getting orders from Restaurant.");
+        Restaurant restaurant = getRestaurant(restaurantId);
+        return restaurant.getOrders().stream().map(MapperUtil :: toOrderDTO).collect(Collectors.toList());
     }
 
-    public Restaurant update(Restaurant restaurant, Long restaurantId) {
-        log.debug("Updating Restaurant from Service.");
+    @Override
+    public OrderDTO getRestaurantOrderById(Long restaurantId, Long orderId) {
+        Restaurant restaurant = getRestaurant(restaurantId);
+        Order order = getOrder(orderId);
+        if (!restaurant.getOrders().contains(order)) {
+            throw new RestaurantNotFoundException(restaurantId);
+        }
+        return MapperUtil.toOrderDTO(order);
+    }
+
+    @Override
+    public OrderDTO modifyOrder(Long restaurantId, Long orderId, OrderModificationVO modification) {
         return null;
     }
 
     @Override
-    public void delete(Restaurant restaurant) {
-        log.debug("Deleting Restaurant from Service.");
-        restaurantRepository.delete(restaurant);
+    public List<FoodItemDTO> getRestaurantFoodItems(Long restaurantId) {
+        log.debug("Getting all Food Items from Restaurant");
+        Restaurant restaurant = getRestaurant(restaurantId);
+        return restaurant.getFoodItems().stream().map(MapperUtil :: toFoodItemDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<RestaurantDTO> findAll() {
+        List<Restaurant> restaurants = restaurantRepository.findAll();
+        return restaurants.stream().map(MapperUtil :: toRestaurantDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public RestaurantDTO findById(Long restaurantId) {
+        log.debug("Find Restaurant By Id.");
+        Restaurant restaurant = getRestaurant(restaurantId);
+        return MapperUtil.toRestaurantDTO(restaurant);
+    }
+
+    @Override
+    public RestaurantDTO save(RestaurantDTO restaurantDTO) {
+        log.debug("Saving Restaurant from Service.");
+        Restaurant restaurant = restaurantRepository.save(MapperUtil.toRestaurant(restaurantDTO));
+        return MapperUtil.toRestaurantDTO(restaurant);
     }
 
     @Override
     public void deleteById(Long restaurantId) {
-        log.debug("Deleting Restaurant By Id from Service.");
         restaurantRepository.deleteById(restaurantId);
     }
 
-    @Override
-    public Restaurant addFoodItems(Long restaurantId, @org.jetbrains.annotations.NotNull List<FoodItem> foodItems) {
-        log.debug("Adding Delicious Food Items.");
-        Restaurant restaurant = findById(restaurantId);
-        log.debug("Adding Food Items to Restaurant " + restaurant.getName() + " from Service. ");
-        foodItems.stream().forEach(foodItem -> {
-            foodItem.setRestaurant(restaurant);
-            foodItemRepository.save(foodItem);
-        });
-        return restaurant;
+
+//    @Override
+//    public Order modifyOrder(Long restaurantId, Long orderId, OrderModificationVO modification) {
+//        //TODO: check working.
+//        Order order = getRestaurantOrderById(restaurantId, orderId);
+//
+//        OrderStatus orderStatus = modification.getOrderStatus();
+//        PaymentMode paymentMode = modification.getPaymentMode();
+//
+//        if (paymentMode != null) {
+//            throw new PaymentModeException("Restaurant cannot change Payment Mode.");
+//        }
+//
+//        if (order.getOrderStatus().getDescription().equals("approved")) {
+//            order.setOrderStatus(orderStatus);
+//        } else {
+//            throw new OrderStatusException("Restaurant cannot change status from " + order.getOrderStatus() + " to " + modification.getOrderStatus());
+//        }
+//        return order;
+//    }
+
+    private Restaurant getRestaurant(Long restaurantId) {
+        return restaurantRepository.findById(restaurantId).orElseThrow(() -> new RestaurantNotFoundException(restaurantId));
     }
 
-    @Override
-    public Restaurant removeFoodItems(Long restaurantId, List<Long> foodItemIds) {
-        Restaurant restaurant = findById(restaurantId);
-        log.debug("Removing Food Items from Restaurant" + restaurant.getName() + " from Service. ");
-        List<FoodItem> foodItems = foodItemRepository.findAllById(foodItemIds);
-        foodItemRepository.deleteAll(foodItems);
-        return restaurant;
-    }
-
-    @Override
-    public List<Order> getRestaurantOrders(Long restaurantId) {
-        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new RestaurantNotFoundException(restaurantId));
-        return restaurant.getOrders().stream().collect(Collectors.toList());
-    }
-
-    @Override
-    public Order getRestaurantOrderById(Long restaurantId, Long orderId) {
-        log.debug("Getting Customer order by id.");
-        Restaurant restaurant = findById(restaurantId);
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
-        if (!order.getRestaurant().equals(restaurant)) {
-            throw new OrderNotFoundException(orderId);
-        }
-        return order;
-    }
-
-    @Override
-    public Order modifyOrder(Long restaurantId, Long orderId, OrderModificationVO modification) {
-        //TODO: check working.
-        Order order = getRestaurantOrderById(restaurantId, orderId);
-
-        OrderStatus orderStatus = modification.getOrderStatus();
-        PaymentMode paymentMode = modification.getPaymentMode();
-
-        if (paymentMode != null) {
-            throw new PaymentModeException("Restaurant cannot change Payment Mode.");
-        }
-
-        if (order.getOrderStatus().getDescription().equals("approved")) {
-            order.setOrderStatus(orderStatus);
-        } else {
-            throw new OrderStatusException("Restaurant cannot change status from " + order.getOrderStatus() + " to " + modification.getOrderStatus());
-        }
-        return order;
+    private Order getOrder(Long orderId) {
+        return orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
     }
 }

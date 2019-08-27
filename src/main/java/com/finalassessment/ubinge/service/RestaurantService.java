@@ -1,20 +1,22 @@
 package com.finalassessment.ubinge.service;
 
-import com.finalassessment.ubinge.model.FoodItem;
-import com.finalassessment.ubinge.model.Order;
-import com.finalassessment.ubinge.model.Restaurant;
+import com.finalassessment.ubinge.dto.FoodItemDTO;
+import com.finalassessment.ubinge.dto.OrderDTO;
+import com.finalassessment.ubinge.dto.RestaurantDTO;
 import com.finalassessment.ubinge.vo.OrderModificationVO;
 
 import java.util.List;
 
-public interface RestaurantService extends CrudService<Restaurant, Long> {
-    Restaurant addFoodItems(Long restaurantId, List<FoodItem> foodItems);
+public interface RestaurantService extends CrudService<RestaurantDTO, Long> {
+    RestaurantDTO addFoodItems(Long restaurantId, List<FoodItemDTO> foodItemDTOs);
 
-    Restaurant removeFoodItems(Long restaurantId, List<Long> foodItemIds);
+    RestaurantDTO removeFoodItems(Long restaurantId, List<Long> foodItemIds);
 
-    List<Order> getRestaurantOrders(Long restaurantId);
+    List<OrderDTO> getRestaurantOrders(Long restaurantId);
 
-    Order getRestaurantOrderById(Long restaurantId, Long orderId);
+    OrderDTO getRestaurantOrderById(Long restaurantId, Long orderId);
 
-    Order modifyOrder(Long restaurantId, Long orderId, OrderModificationVO modification);
+    OrderDTO modifyOrder(Long restaurantId, Long orderId, OrderModificationVO modification);
+
+    List<FoodItemDTO> getRestaurantFoodItems(Long restaurantId);
 }
