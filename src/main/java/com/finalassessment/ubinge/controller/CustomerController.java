@@ -1,5 +1,8 @@
 package com.finalassessment.ubinge.controller;
 
+import com.finalassessment.ubinge.dto.CustomerDTO;
+import com.finalassessment.ubinge.mapper.CustomerContext;
+import com.finalassessment.ubinge.mapper.CustomerMapper;
 import com.finalassessment.ubinge.model.Customer;
 import com.finalassessment.ubinge.model.Order;
 import com.finalassessment.ubinge.service.CustomerService;
@@ -17,6 +20,7 @@ import java.util.List;
 @RestController
 public class CustomerController {
     private CustomerService customerService;
+    private CustomerContext customerContext = new CustomerContext(null);
 
     @Autowired
     public CustomerController(CustomerService customerService) {
@@ -47,8 +51,9 @@ public class CustomerController {
     }
 
     @PostMapping(value = "/customers")
-    public ResponseEntity<Customer> saveCustomer(@RequestBody Customer customer) {
+    public ResponseEntity<Customer> saveCustomer(@RequestBody CustomerDTO customerDTO) {
         log.debug("Saving Customer.");
+        Customer customer = CustomerMapper.CUSTOMER_MAPPER.toEntity(customerDTO, customerContext);
         customerService.save(customer);
         return ResponseEntity.status(HttpStatus.CREATED).body(customerService.save(customer));
     }
