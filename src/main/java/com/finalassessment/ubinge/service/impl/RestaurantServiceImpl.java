@@ -110,6 +110,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public Order modifyOrder(Long restaurantId, Long orderId, OrderModificationVO modification) {
+        //TODO: check working.
         Order order = getRestaurantOrderById(restaurantId, orderId);
 
         OrderStatus orderStatus = modification.getOrderStatus();
