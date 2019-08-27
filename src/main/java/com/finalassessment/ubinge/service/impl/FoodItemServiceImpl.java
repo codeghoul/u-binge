@@ -44,12 +44,6 @@ public class FoodItemServiceImpl implements FoodItemService {
     }
 
     @Override
-    public void delete(FoodItem foodItem) {
-        log.debug("Deleting Food Item from Service.");
-        foodItemRepository.delete(foodItem);
-    }
-
-    @Override
     public void deleteById(Long foodItemId) {
         log.debug("Deleting Food Item By Id from Service.");
         foodItemRepository.deleteById(foodItemId);

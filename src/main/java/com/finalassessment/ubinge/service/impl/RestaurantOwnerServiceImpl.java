@@ -77,13 +77,6 @@ public class RestaurantOwnerServiceImpl implements RestaurantOwnerService {
         return restaurantRepository.saveAndFlush(restaurant);
     }
 
-
-    @Override
-    public void delete(RestaurantOwner restaurantOwner) {
-        log.debug("Deleting Restaurant Owner from Service.");
-        restaurantOwnerRepository.delete(restaurantOwner);
-    }
-
     @Override
     public void deleteById(Long restaurantOwnerId) {
         log.debug("Deleting Restaurant Owner by Id from Service.");

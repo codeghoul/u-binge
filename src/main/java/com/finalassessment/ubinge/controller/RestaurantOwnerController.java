@@ -65,13 +65,6 @@ public class RestaurantOwnerController {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantOwnerService.updateRestaurantDetails(generalDetailVO, restaurantOwnerId, restaurantId));
     }
 
-    @DeleteMapping(value = "/restaurantowners")
-    public ResponseEntity<Object> deleteRestaurantOwner(@RequestBody RestaurantOwner restaurantOwner) {
-        log.debug("Deleting Restaurant Owner.");
-        restaurantOwnerService.delete(restaurantOwner);
-        return ResponseEntity.noContent().build();
-    }
-
     @DeleteMapping(value = "/restaurantowners/{restaurantOwnerId}")
     public ResponseEntity<?> deleteRestaurantOwnerById(@PathVariable Long restaurantOwnerId) {
         log.debug("Deleting Restaurant Owner by Restaurant Owner id.");
