@@ -14,7 +14,6 @@ public class MapperUtil {
         customer.setPhoneNo(customerDTO.getPhoneNo());
         customer.setEmail(customerDTO.getEmail());
         customer.setPassword(customerDTO.getPassword());
-        customer.setRole("USER");
         return customer;
     }
 
@@ -24,7 +23,6 @@ public class MapperUtil {
         customerDTO.setEmail(customer.getEmail());
         customerDTO.setName(customer.getName());
         customerDTO.setPhoneNo(customer.getPhoneNo());
-        customerDTO.setRole(customer.getRole());
         customerDTO.setOrderIds(getSetOfId(customer.getOrders()));
         return customerDTO;
     }
@@ -97,7 +95,6 @@ public class MapperUtil {
         deliveryGuy.setEmail(deliveryGuyDTO.getEmail());
         deliveryGuy.setPhoneNo(deliveryGuyDTO.getPhoneNo());
         deliveryGuy.setPassword(deliveryGuyDTO.getPassword());
-        deliveryGuy.setRole("DELIVERY");
         return deliveryGuy;
     }
 
@@ -108,7 +105,6 @@ public class MapperUtil {
         deliveryGuyDTO.setEmail(deliveryGuy.getEmail());
         deliveryGuyDTO.setName(deliveryGuy.getName());
         deliveryGuyDTO.setPhoneNo(deliveryGuy.getPhoneNo());
-        deliveryGuyDTO.setRole(deliveryGuy.getRole());
         deliveryGuyDTO.setOrderIds(getSetOfId(deliveryGuy.getOrders()));
         return deliveryGuyDTO;
     }
@@ -119,7 +115,6 @@ public class MapperUtil {
         restaurant.setPhoneNo(restaurantDTO.getPhoneNo());
         restaurant.setEmail(restaurantDTO.getEmail());
         restaurant.setPassword(restaurantDTO.getPassword());
-        restaurant.setRole("RESTRO");
         return restaurant;
     }
 
@@ -129,7 +124,6 @@ public class MapperUtil {
         restaurantDTO.setName(restaurant.getName());
         restaurantDTO.setPhoneNo(restaurant.getPhoneNo());
         restaurantDTO.setEmail(restaurant.getEmail());
-        restaurantDTO.setRole(restaurant.getRole());
         restaurantDTO.setOrderIds(getSetOfId(restaurant.getOrders()));
         restaurantDTO.setFoodItemIds(getSetOfId(restaurant.getFoodItems()));
         return restaurantDTO;
@@ -141,7 +135,6 @@ public class MapperUtil {
         restaurantOwnerDTO.setName(restaurantOwner.getName());
         restaurantOwnerDTO.setEmail(restaurantOwner.getEmail());
         restaurantOwnerDTO.setPhoneNo(restaurantOwner.getPhoneNo());
-        restaurantOwnerDTO.setRole(restaurantOwner.getRole());
         restaurantOwnerDTO.setRestaurantIds(getSetOfId(restaurantOwner.getRestaurants()));
         return restaurantOwnerDTO;
     }
@@ -152,7 +145,6 @@ public class MapperUtil {
         restaurantOwner.setEmail(restaurantOwnerDTO.getEmail());
         restaurantOwner.setPhoneNo(restaurantOwnerDTO.getPhoneNo());
         restaurantOwner.setPassword(restaurantOwnerDTO.getPassword());
-        restaurantOwner.setRole("OWNER");
         return restaurantOwner;
     }
 }

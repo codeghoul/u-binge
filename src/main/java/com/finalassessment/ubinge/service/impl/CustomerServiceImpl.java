@@ -11,8 +11,11 @@ import com.finalassessment.ubinge.exception.OrderStatusException;
 import com.finalassessment.ubinge.exception.PaymentModeException;
 import com.finalassessment.ubinge.model.Customer;
 import com.finalassessment.ubinge.model.Order;
+import com.finalassessment.ubinge.model.User;
 import com.finalassessment.ubinge.repository.CustomerRepository;
 import com.finalassessment.ubinge.repository.OrderRepository;
+import com.finalassessment.ubinge.repository.RoleRepository;
+import com.finalassessment.ubinge.repository.UserRepository;
 import com.finalassessment.ubinge.service.CustomerService;
 import com.finalassessment.ubinge.utility.MapperUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -27,11 +30,15 @@ import java.util.stream.Collectors;
 public class CustomerServiceImpl implements CustomerService {
     private CustomerRepository customerRepository;
     private OrderRepository orderRepository;
+    private UserRepository userRepository;
+    private RoleRepository roleRepository;
 
     @Autowired
-    public CustomerServiceImpl(CustomerRepository customerRepository, OrderRepository orderRepository) {
+    public CustomerServiceImpl(CustomerRepository customerRepository, OrderRepository orderRepository, UserRepository userRepository, RoleRepository roleRepository) {
         this.customerRepository = customerRepository;
         this.orderRepository = orderRepository;
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -44,7 +51,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerDTO findById(Long customerId) {
         log.debug("Returning Customer(s) by id from Service");
-        Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));
+        Customer customer = getCustomer(customerId);
         return MapperUtil.toCustomerDTO(customer);
     }
 
@@ -52,6 +59,7 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerDTO save(CustomerDTO newCustomer) {
         log.debug("Saving Customer(s) from Service");
         Customer customer = customerRepository.save(MapperUtil.toCustomer(newCustomer));
+        createUser(customer);
         return MapperUtil.toCustomerDTO(customer);
     }
 
@@ -64,12 +72,16 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerDTO update(CustomerDTO customerDTO, Long customerId) {
         log.debug("Updating Customer Details.");
-        Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));
+        Customer customer = getCustomer(customerId);
+        User user = userRepository.findByEmail(customer.getEmail());
+
+        user.setEmail(customerDTO.getEmail());
         customer.setName(customerDTO.getName());
         customer.setEmail(customerDTO.getEmail());
         customer.setPhoneNo(customerDTO.getPhoneNo());
         customer.setPassword(customerDTO.getPassword());
-        customer.setRole("USER");
+
+        userRepository.save(user);
         customerRepository.save(customer);
         return MapperUtil.toCustomerDTO(customer);
     }
@@ -77,7 +89,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<OrderDTO> getCustomerOrders(Long customerId) {
         log.debug("Get all Customer Orders.");
-        Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));
+        Customer customer = getCustomer(customerId);
         return customer.getOrders().stream().map(order -> MapperUtil.toOrderDTO(order)).collect(Collectors.toList());
     }
 
@@ -123,5 +135,13 @@ public class CustomerServiceImpl implements CustomerService {
 
     private Order getOrder(Long orderId) {
         return orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
+    }
+
+    private void createUser(Customer customer) {
+        User user = new User();
+        user.setEmail(customer.getEmail());
+        user.setPassword(customer.getPassword());
+        user.setRole(roleRepository.findByRole("C"));
+        userRepository.save(user);
     }
 }

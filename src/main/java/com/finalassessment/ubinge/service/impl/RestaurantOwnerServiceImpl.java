@@ -6,12 +6,14 @@ import com.finalassessment.ubinge.exception.RestaurantNotFoundException;
 import com.finalassessment.ubinge.exception.RestaurantOwnerNotFoundException;
 import com.finalassessment.ubinge.model.Restaurant;
 import com.finalassessment.ubinge.model.RestaurantOwner;
+import com.finalassessment.ubinge.model.User;
 import com.finalassessment.ubinge.repository.RestaurantOwnerRepository;
 import com.finalassessment.ubinge.repository.RestaurantRepository;
+import com.finalassessment.ubinge.repository.RoleRepository;
+import com.finalassessment.ubinge.repository.UserRepository;
 import com.finalassessment.ubinge.service.RestaurantOwnerService;
 import com.finalassessment.ubinge.utility.MapperUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,12 +26,15 @@ import java.util.stream.Collectors;
 public class RestaurantOwnerServiceImpl implements RestaurantOwnerService {
     private RestaurantOwnerRepository restaurantOwnerRepository;
     private RestaurantRepository restaurantRepository;
+    private RoleRepository roleRepository;
+    private UserRepository userRepository;
 
-    @Contract(pure = true)
     @Autowired
-    public RestaurantOwnerServiceImpl(RestaurantOwnerRepository restaurantOwnerRepository, RestaurantRepository restaurantRepository) {
+    public RestaurantOwnerServiceImpl(RestaurantOwnerRepository restaurantOwnerRepository, RestaurantRepository restaurantRepository, UserRepository userRepository, RoleRepository roleRepository) {
         this.restaurantOwnerRepository = restaurantOwnerRepository;
         this.restaurantRepository = restaurantRepository;
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -56,6 +61,7 @@ public class RestaurantOwnerServiceImpl implements RestaurantOwnerService {
     public RestaurantOwnerDTO save(RestaurantOwnerDTO restaurantOwnerDTO) {
         log.debug("Saving Restaurant Owner from Service.");
         RestaurantOwner restaurantOwner = MapperUtil.toRestaurantOwner(restaurantOwnerDTO);
+        createUser(restaurantOwner);
         return MapperUtil.toRestaurantOwnerDTO(restaurantOwnerRepository.save(restaurantOwner));
     }
 
@@ -63,26 +69,29 @@ public class RestaurantOwnerServiceImpl implements RestaurantOwnerService {
     public RestaurantOwnerDTO update(RestaurantOwnerDTO restaurantOwnerDTO, Long restaurantOwnerId) {
         log.debug("Updating Restaurant Owner from Service.");
         RestaurantOwner restaurantOwner = getRestaurantOwner(restaurantOwnerId);
+        User user = userRepository.findByEmail(restaurantOwner.getEmail());
+        user.setEmail(restaurantOwnerDTO.getEmail());
         restaurantOwner.setName(restaurantOwnerDTO.getName());
         restaurantOwner.setEmail(restaurantOwnerDTO.getEmail());
         restaurantOwner.setPhoneNo(restaurantOwnerDTO.getPhoneNo());
         restaurantOwner.setPassword(restaurantOwnerDTO.getPassword());
-        restaurantOwner.setRole("OWNER");
         return MapperUtil.toRestaurantOwnerDTO(restaurantOwnerRepository.saveAndFlush(restaurantOwner));
     }
 
     @Override
     public RestaurantDTO updateRestaurantDetails(RestaurantDTO restaurantDTO, Long restaurantOwnerId, Long restaurantId) {
+        //TODO: will user reflect password update?
         Restaurant restaurant = getRestaurant(restaurantId);
         RestaurantOwner restaurantOwner = getRestaurantOwner(restaurantOwnerId);
         if (!restaurantOwner.getRestaurants().contains(restaurant)) {
             throw new IllegalArgumentException("You don't own restaurant: " + restaurant.getName());
         }
+        User user = userRepository.findByEmail(restaurant.getEmail());
+        user.setEmail(restaurantDTO.getEmail());
         restaurant.setName(restaurantDTO.getName());
         restaurant.setEmail(restaurantDTO.getEmail());
         restaurant.setPhoneNo(restaurantDTO.getPhoneNo());
         restaurant.setPassword(restaurantDTO.getPassword());
-        restaurant.setRole("RESTRO");
         return MapperUtil.toRestaurantDTO(restaurantRepository.saveAndFlush(restaurant));
     }
 
@@ -99,6 +108,7 @@ public class RestaurantOwnerServiceImpl implements RestaurantOwnerService {
         restaurantDTOs.stream().forEach(restaurantDTO -> {
             Restaurant restaurant = MapperUtil.toRestaurant(restaurantDTO);
             restaurant.setRestaurantOwner(restaurantOwner);
+            createUser(restaurant);
             restaurantRepository.save(restaurant);
         });
         return MapperUtil.toRestaurantOwnerDTO(restaurantOwner);
@@ -120,5 +130,21 @@ public class RestaurantOwnerServiceImpl implements RestaurantOwnerService {
 
     private Restaurant getRestaurant(Long restaurantId) {
         return restaurantRepository.findById(restaurantId).orElseThrow(() -> new RestaurantNotFoundException(restaurantId));
+    }
+
+    private void createUser(Restaurant restaurant) {
+        User user = new User();
+        user.setEmail(restaurant.getEmail());
+        user.setPassword(restaurant.getPassword());
+        user.setRole(roleRepository.findByRole("R"));
+        userRepository.save(user);
+    }
+
+    private void createUser(RestaurantOwner restaurantOwner) {
+        User user = new User();
+        user.setEmail(restaurantOwner.getEmail());
+        user.setPassword(restaurantOwner.getPassword());
+        user.setRole(roleRepository.findByRole("RO"));
+        userRepository.save(user);
     }
 }

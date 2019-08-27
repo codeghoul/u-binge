@@ -11,8 +11,11 @@ import com.finalassessment.ubinge.exception.OrderStatusException;
 import com.finalassessment.ubinge.exception.PaymentModeException;
 import com.finalassessment.ubinge.model.DeliveryGuy;
 import com.finalassessment.ubinge.model.Order;
+import com.finalassessment.ubinge.model.User;
 import com.finalassessment.ubinge.repository.DeliveryGuyRepository;
 import com.finalassessment.ubinge.repository.OrderRepository;
+import com.finalassessment.ubinge.repository.RoleRepository;
+import com.finalassessment.ubinge.repository.UserRepository;
 import com.finalassessment.ubinge.service.DeliveryGuyService;
 import com.finalassessment.ubinge.utility.MapperUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +30,8 @@ import java.util.stream.Collectors;
 public class DeliveryGuyServiceImpl implements DeliveryGuyService {
     private DeliveryGuyRepository deliveryGuyRepository;
     private OrderRepository orderRepository;
+    private RoleRepository roleRepository;
+    private UserRepository userRepository;
 
     @Autowired
     public DeliveryGuyServiceImpl(DeliveryGuyRepository deliveryGuyRepository, OrderRepository orderRepository) {
@@ -51,6 +56,7 @@ public class DeliveryGuyServiceImpl implements DeliveryGuyService {
     public DeliveryGuyDTO save(DeliveryGuyDTO deliveryGuyDTO) {
         log.debug("Saving Delivery Guy from Service");
         DeliveryGuy deliveryGuy = deliveryGuyRepository.save(MapperUtil.toDeliveryGuy(deliveryGuyDTO));
+        createUser(deliveryGuy);
         return MapperUtil.toDeliveryGuyDTO(deliveryGuy);
     }
 
@@ -58,11 +64,14 @@ public class DeliveryGuyServiceImpl implements DeliveryGuyService {
     public DeliveryGuyDTO update(DeliveryGuyDTO deliveryGuyDTO, Long deliveryGuyId) {
         log.debug("Updating Delivery Guy.");
         DeliveryGuy deliveryGuy = getDeliveryGuy(deliveryGuyId);
+        User user = userRepository.findByEmail(deliveryGuy.getEmail());
+
         deliveryGuy.setName(deliveryGuyDTO.getName());
         deliveryGuy.setPhoneNo(deliveryGuyDTO.getPhoneNo());
         deliveryGuy.setEmail(deliveryGuyDTO.getEmail());
         deliveryGuy.setPassword(deliveryGuyDTO.getPassword());
-        deliveryGuy.setRole("DELIVERY");
+
+        userRepository.saveAndFlush(user);
         deliveryGuyRepository.saveAndFlush(deliveryGuy);
         return MapperUtil.toDeliveryGuyDTO(deliveryGuy);
     }
@@ -120,5 +129,13 @@ public class DeliveryGuyServiceImpl implements DeliveryGuyService {
 
     private Order getOrder(Long orderId) {
         return orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
+    }
+
+    private void createUser(DeliveryGuy deliveryGuy) {
+        User user = new User();
+        user.setEmail(deliveryGuy.getEmail());
+        user.setPassword(deliveryGuy.getPassword());
+        user.setRole(roleRepository.findByRole("DG"));
+        userRepository.save(user);
     }
 }
