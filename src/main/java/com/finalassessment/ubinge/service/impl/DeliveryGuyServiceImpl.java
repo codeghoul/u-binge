@@ -1,9 +1,14 @@
 package com.finalassessment.ubinge.service.impl;
 
+import com.finalassessment.ubinge.constants.OrderStatus;
+import com.finalassessment.ubinge.constants.PaymentMode;
 import com.finalassessment.ubinge.dto.DeliveryGuyDTO;
 import com.finalassessment.ubinge.dto.OrderDTO;
+import com.finalassessment.ubinge.dto.OrderModificationDTO;
 import com.finalassessment.ubinge.exception.DeliveryGuyNotFoundException;
 import com.finalassessment.ubinge.exception.OrderNotFoundException;
+import com.finalassessment.ubinge.exception.OrderStatusException;
+import com.finalassessment.ubinge.exception.PaymentModeException;
 import com.finalassessment.ubinge.model.DeliveryGuy;
 import com.finalassessment.ubinge.model.Order;
 import com.finalassessment.ubinge.repository.DeliveryGuyRepository;
@@ -82,24 +87,30 @@ public class DeliveryGuyServiceImpl implements DeliveryGuyService {
         return MapperUtil.toOrderDTO(order);
     }
 
-//    @Override
-//    public Order modifyOrder(Long deliveryGuyId, Long orderId, OrderModificationVO modification) {
-//        Order order = getDeliveryGuyOrderById(deliveryGuyId, orderId);
-//
-//        PaymentMode paymentMode = modification.getPaymentMode();
-//        OrderStatus orderStatus = modification.getOrderStatus();
-//
-//        if (paymentMode != null) {
-//            throw new PaymentModeException("Delivery Guy cannot change Payment Mode.");
-//        }
-//
-//        if (order.getOrderStatus().getDescription().equals("picked up") && orderStatus.getDescription().equals("delivered")) {
-//            order.setOrderStatus(OrderStatus.DELIVERED);
-//        } else {
-//            throw new OrderStatusException("Delivery guy cannot change status from " + order.getOrderStatus() + " to " + modification.getOrderStatus());
-//        }
-//        return orderRepository.saveAndFlush(order);
-//    }
+    @Override
+    public OrderDTO modifyOrder(Long deliveryGuyId, Long orderId, OrderModificationDTO modification) {
+        DeliveryGuy deliveryGuy = getDeliveryGuy(deliveryGuyId);
+        Order order = getOrder(orderId);
+
+        //TODO: use different error.
+        if (!deliveryGuy.getOrders().contains(order)) {
+            throw new OrderNotFoundException(orderId);
+        }
+
+        PaymentMode paymentMode = modification.getPaymentMode();
+        OrderStatus orderStatus = modification.getOrderStatus();
+
+        if (paymentMode != null) {
+            throw new PaymentModeException("Delivery Guy cannot change Payment Mode.");
+        }
+
+        if (order.getOrderStatus().getDescription().equals("picked up") && orderStatus.getDescription().equals("delivered")) {
+            order.setOrderStatus(OrderStatus.DELIVERED);
+        } else {
+            throw new OrderStatusException("Delivery guy cannot change status from " + order.getOrderStatus() + " to " + modification.getOrderStatus());
+        }
+        return MapperUtil.toOrderDTO(orderRepository.save(order));
+    }
 
     private DeliveryGuy getDeliveryGuy(Long deliveryGuyId) {
         return deliveryGuyRepository.findById(deliveryGuyId).orElseThrow(() -> new DeliveryGuyNotFoundException(deliveryGuyId));

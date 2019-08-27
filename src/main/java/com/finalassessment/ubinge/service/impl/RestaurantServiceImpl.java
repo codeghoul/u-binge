@@ -1,9 +1,14 @@
 package com.finalassessment.ubinge.service.impl;
 
+import com.finalassessment.ubinge.constants.OrderStatus;
+import com.finalassessment.ubinge.constants.PaymentMode;
 import com.finalassessment.ubinge.dto.FoodItemDTO;
 import com.finalassessment.ubinge.dto.OrderDTO;
+import com.finalassessment.ubinge.dto.OrderModificationDTO;
 import com.finalassessment.ubinge.dto.RestaurantDTO;
 import com.finalassessment.ubinge.exception.OrderNotFoundException;
+import com.finalassessment.ubinge.exception.OrderStatusException;
+import com.finalassessment.ubinge.exception.PaymentModeException;
 import com.finalassessment.ubinge.exception.RestaurantNotFoundException;
 import com.finalassessment.ubinge.model.FoodItem;
 import com.finalassessment.ubinge.model.Order;
@@ -13,7 +18,6 @@ import com.finalassessment.ubinge.repository.OrderRepository;
 import com.finalassessment.ubinge.repository.RestaurantRepository;
 import com.finalassessment.ubinge.service.RestaurantService;
 import com.finalassessment.ubinge.utility.MapperUtil;
-import com.finalassessment.ubinge.vo.OrderModificationVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,11 +74,6 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public OrderDTO modifyOrder(Long restaurantId, Long orderId, OrderModificationVO modification) {
-        return null;
-    }
-
-    @Override
     public List<FoodItemDTO> getRestaurantFoodItems(Long restaurantId) {
         log.debug("Getting all Food Items from Restaurant");
         Restaurant restaurant = getRestaurant(restaurantId);
@@ -107,25 +106,30 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
 
-//    @Override
-//    public Order modifyOrder(Long restaurantId, Long orderId, OrderModificationVO modification) {
-//        //TODO: check working.
-//        Order order = getRestaurantOrderById(restaurantId, orderId);
-//
-//        OrderStatus orderStatus = modification.getOrderStatus();
-//        PaymentMode paymentMode = modification.getPaymentMode();
-//
-//        if (paymentMode != null) {
-//            throw new PaymentModeException("Restaurant cannot change Payment Mode.");
-//        }
-//
-//        if (order.getOrderStatus().getDescription().equals("approved")) {
-//            order.setOrderStatus(orderStatus);
-//        } else {
-//            throw new OrderStatusException("Restaurant cannot change status from " + order.getOrderStatus() + " to " + modification.getOrderStatus());
-//        }
-//        return order;
-//    }
+    @Override
+    public OrderDTO modifyOrder(Long restaurantId, Long orderId, OrderModificationDTO modification) {
+        //TODO: check working.
+        Restaurant restaurant = getRestaurant(restaurantId);
+        Order order =  getOrder(orderId);
+
+        if (!restaurant.getOrders().contains(order)) {
+            throw new RestaurantNotFoundException(restaurantId);
+        }
+
+        OrderStatus orderStatus = modification.getOrderStatus();
+        PaymentMode paymentMode = modification.getPaymentMode();
+
+        if (paymentMode != null) {
+            throw new PaymentModeException("Restaurant cannot change Payment Mode.");
+        }
+
+        if (order.getOrderStatus().getDescription().equals("approved")) {
+            order.setOrderStatus(orderStatus);
+        } else {
+            throw new OrderStatusException("Restaurant cannot change status from " + order.getOrderStatus() + " to " + modification.getOrderStatus());
+        }
+        return MapperUtil.toOrderDTO(orderRepository.save(order));
+    }
 
     private Restaurant getRestaurant(Long restaurantId) {
         return restaurantRepository.findById(restaurantId).orElseThrow(() -> new RestaurantNotFoundException(restaurantId));

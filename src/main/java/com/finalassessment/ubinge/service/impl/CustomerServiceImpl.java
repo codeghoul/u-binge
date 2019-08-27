@@ -1,9 +1,14 @@
 package com.finalassessment.ubinge.service.impl;
 
+import com.finalassessment.ubinge.constants.OrderStatus;
+import com.finalassessment.ubinge.constants.PaymentMode;
 import com.finalassessment.ubinge.dto.CustomerDTO;
 import com.finalassessment.ubinge.dto.OrderDTO;
+import com.finalassessment.ubinge.dto.OrderModificationDTO;
 import com.finalassessment.ubinge.exception.CustomerNotFoundException;
 import com.finalassessment.ubinge.exception.OrderNotFoundException;
+import com.finalassessment.ubinge.exception.OrderStatusException;
+import com.finalassessment.ubinge.exception.PaymentModeException;
 import com.finalassessment.ubinge.model.Customer;
 import com.finalassessment.ubinge.model.Order;
 import com.finalassessment.ubinge.repository.CustomerRepository;
@@ -85,27 +90,30 @@ public class CustomerServiceImpl implements CustomerService {
         return MapperUtil.toOrderDTO(order);
     }
 
-//    @Override
-//    public Order modifyOrder(Long customerId, Long orderId, OrderModificationVO modification) {
-//        log.debug("Modifying Order.");
-//        Order order = getCustomerOrderById(customerId, orderId);
-//
-//        PaymentMode paymentMode = modification.getPaymentMode();
-//        OrderStatus orderStatus = modification.getOrderStatus();
-//
-//        if (paymentMode != null) {
-//            throw new PaymentModeException("Payment mode cannot be changed now.");
-//        }
-//
-//        if (!order.getOrderStatus().getDescription().equals("delivered") && orderStatus.getDescription().equals("cancelled")) {
-//            log.debug("Successfully changed order status.");
-//            order.setOrderStatus(OrderStatus.CANCELLED_BY_USER);
-//        } else {
-//            throw new OrderStatusException("The order you are trying to cancel is already: " + order.getOrderStatus());
-//        }
-//
-//        return orderRepository.save(order);
-//    }
+    @Override
+    public OrderDTO modifyOrder(Long customerId, Long orderId, OrderModificationDTO modification) {
+        log.debug("Modifying Order.");
+        Customer customer = getCustomer(customerId);
+        Order order = getOrder(orderId);
+        if (!order.getCustomer().equals(customer)) {
+            throw new OrderNotFoundException(orderId);
+        }
+        PaymentMode paymentMode = modification.getPaymentMode();
+        OrderStatus orderStatus = modification.getOrderStatus();
+
+        if (paymentMode != null) {
+            throw new PaymentModeException("Payment mode cannot be changed now.");
+        }
+
+        if (!order.getOrderStatus().getDescription().equals("delivered") && orderStatus.getDescription().equals("cancelled")) {
+            log.debug("Successfully changed order status.");
+            order.setOrderStatus(OrderStatus.CANCELLED_BY_USER);
+        } else {
+            throw new OrderStatusException("The order you are trying to cancel is already: " + order.getOrderStatus());
+        }
+
+        return MapperUtil.toOrderDTO(orderRepository.save(order));
+    }
 
     private Customer getCustomer(Long customerId) {
         return customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));

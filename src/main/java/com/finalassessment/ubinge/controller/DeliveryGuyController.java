@@ -2,6 +2,7 @@ package com.finalassessment.ubinge.controller;
 
 import com.finalassessment.ubinge.dto.DeliveryGuyDTO;
 import com.finalassessment.ubinge.dto.OrderDTO;
+import com.finalassessment.ubinge.dto.OrderModificationDTO;
 import com.finalassessment.ubinge.service.DeliveryGuyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,11 +58,11 @@ public class DeliveryGuyController {
         return ResponseEntity.status(HttpStatus.OK).body(deliveryGuyService.update(deliveryGuyDTO, deliveryGuyId));
     }
 
-//    @PutMapping(value = "/deliveryguys/{deliveryGuyId}/orders/{orderId}")
-//    public ResponseEntity<Order> modifyOrder(@PathVariable Long deliveryGuyId, @PathVariable Long orderId, @RequestBody OrderModificationVO modification) {
-//        log.debug("Modifying Delivery Guy Order.");
-//        return ResponseEntity.status(HttpStatus.OK).body(deliveryGuyService.modifyOrder(deliveryGuyId, orderId, modification));
-//    }
+    @PutMapping(value = "/deliveryguys/{deliveryGuyId}/orders/{orderId}")
+    public ResponseEntity<OrderDTO> modifyOrder(@PathVariable Long deliveryGuyId, @PathVariable Long orderId, @RequestBody OrderModificationDTO modification) {
+        log.debug("Modifying Delivery Guy Order.");
+        return ResponseEntity.status(HttpStatus.OK).body(deliveryGuyService.modifyOrder(deliveryGuyId, orderId, modification));
+    }
 
     @DeleteMapping(value = "/deliveryguys/{deliveryGuyId}")
     public ResponseEntity<?> deleteDeliveryGuyById(@PathVariable Long deliveryGuyId) {

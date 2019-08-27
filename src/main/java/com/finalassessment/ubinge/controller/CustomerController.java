@@ -2,6 +2,7 @@ package com.finalassessment.ubinge.controller;
 
 import com.finalassessment.ubinge.dto.CustomerDTO;
 import com.finalassessment.ubinge.dto.OrderDTO;
+import com.finalassessment.ubinge.dto.OrderModificationDTO;
 import com.finalassessment.ubinge.service.CustomerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,16 +66,10 @@ public class CustomerController {
         return ResponseEntity.noContent().build();
     }
 
-//    @PutMapping(value = "/customers/{customerId}/orders/{orderId}")
-//    public ResponseEntity<Order> modifyOrder(@PathVariable Long customerId, @PathVariable Long orderId, @RequestBody OrderModificationVO modification) {
-//        log.debug("Modifying Customer Order.");
-//        return ResponseEntity.status(HttpStatus.OK).body(customerService.modifyOrder(customerId, orderId, modification));
-//    }
-//
-//    @DeleteMapping(value = "/customers")
-//    public ResponseEntity<?> deleteCustomer(@RequestBody Customer customer) {
-//        log.debug("Deleting Customer.");
-//        customerService.delete(customer);
-//        return ResponseEntity.noContent().build();
-//    }
+    @PutMapping(value = "/customers/{customerId}/orders/{orderId}")
+    public ResponseEntity<OrderDTO> modifyOrder(@PathVariable Long customerId, @PathVariable Long orderId, @RequestBody OrderModificationDTO modification) {
+        log.debug("Modifying Customer Order.");
+        return ResponseEntity.status(HttpStatus.OK).body(customerService.modifyOrder(customerId, orderId, modification));
+    }
+
 }

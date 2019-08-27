@@ -2,9 +2,9 @@ package com.finalassessment.ubinge.controller;
 
 import com.finalassessment.ubinge.dto.FoodItemDTO;
 import com.finalassessment.ubinge.dto.OrderDTO;
+import com.finalassessment.ubinge.dto.OrderModificationDTO;
 import com.finalassessment.ubinge.dto.RestaurantDTO;
 import com.finalassessment.ubinge.service.RestaurantService;
-import com.finalassessment.ubinge.vo.OrderModificationVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -54,7 +54,7 @@ public class RestaurantController {
     }
 
     @PutMapping(value = "/restaurants/{restaurantId}/orders/{orderId}")
-    public ResponseEntity<OrderDTO> modifyOrder(@PathVariable Long restaurantId, @PathVariable Long orderId, @RequestBody OrderModificationVO modification) {
+    public ResponseEntity<OrderDTO> modifyOrder(@PathVariable Long restaurantId, @PathVariable Long orderId, @RequestBody OrderModificationDTO modification) {
         log.debug("Modifying Customer Order.");
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.modifyOrder(restaurantId, orderId, modification));
     }

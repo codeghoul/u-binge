@@ -1,4 +1,4 @@
-package com.finalassessment.ubinge.vo;
+package com.finalassessment.ubinge.dto;
 
 import com.finalassessment.ubinge.constants.OrderStatus;
 import com.finalassessment.ubinge.constants.PaymentMode;
@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class OrderModificationVO {
+public class OrderModificationDTO {
     OrderStatus orderStatus;
     PaymentMode paymentMode;
 }
