@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -40,26 +41,27 @@ public class RestaurantOwnerController {
     }
 
     @PostMapping(value = "/restaurantowners")
-    public ResponseEntity<RestaurantOwnerDTO> saveRestaurantOwner(@RequestBody RestaurantOwnerDTO restaurantOwnerDTO) {
+    public ResponseEntity<RestaurantOwnerDTO> saveRestaurantOwner(@Valid @RequestBody RestaurantOwnerDTO restaurantOwnerDTO) {
         log.debug("Saving Restaurant Owner.");
         return ResponseEntity.status(HttpStatus.CREATED).body(restaurantOwnerService.save(restaurantOwnerDTO));
     }
 
+    //TODO: find way to validate when objects are in list form.
     @PostMapping(value = "/restaurantowners/{restaurantOwnerId}/restaurants")
-    public ResponseEntity<RestaurantOwnerDTO> saveRestaurants(@PathVariable Long restaurantOwnerId, @RequestBody List<RestaurantDTO> restaurantDTOs) {
+    public ResponseEntity<RestaurantOwnerDTO> saveRestaurants(@PathVariable Long restaurantOwnerId, @RequestBody List<@Valid RestaurantDTO> restaurantDTOs) {
         log.debug("Adding Restaurants to system - Restaurant Owners.");
         return ResponseEntity.status(HttpStatus.CREATED).body(restaurantOwnerService.saveRestaurants(restaurantOwnerId, restaurantDTOs));
     }
 
 
     @PutMapping(value = "/restaurantowners/{restaurantOwnerId}")
-    public ResponseEntity<RestaurantOwnerDTO> updateRestaurantOwner(@RequestBody RestaurantOwnerDTO restaurantOwnerDTO, @PathVariable Long restaurantOwnerId) {
+    public ResponseEntity<RestaurantOwnerDTO> updateRestaurantOwner(@Valid @RequestBody RestaurantOwnerDTO restaurantOwnerDTO, @PathVariable Long restaurantOwnerId) {
         log.debug("Updating Restaurant Owner by Restaurant id.");
         return ResponseEntity.status(HttpStatus.OK).body(restaurantOwnerService.update(restaurantOwnerDTO, restaurantOwnerId));
     }
 
     @PutMapping(value = "/restaurantowners/{restaurantOwnerId}/restaurants/{restaurantId}")
-    public ResponseEntity<RestaurantDTO> updateRestaurantDetails(@RequestBody RestaurantDTO restaurantDTO, @PathVariable Long restaurantOwnerId, @PathVariable Long restaurantId) {
+    public ResponseEntity<RestaurantDTO> updateRestaurantDetails(@Valid @RequestBody RestaurantDTO restaurantDTO, @PathVariable Long restaurantOwnerId, @PathVariable Long restaurantId) {
         log.debug("Updating Restaurant Owner by Restaurant id.");
         return ResponseEntity.status(HttpStatus.OK).body(restaurantOwnerService.updateRestaurantDetails(restaurantDTO, restaurantOwnerId, restaurantId));
     }
@@ -72,7 +74,7 @@ public class RestaurantOwnerController {
     }
 
     @DeleteMapping(value = "/restaurantowners/{restaurantOwnerId}/restaurants")
-    public ResponseEntity<?> deleteRestaurants(@PathVariable Long restaurantOwnerId, @RequestBody List<Long> restaurantIds) {
+    public ResponseEntity<?> deleteRestaurants(@PathVariable Long restaurantOwnerId, @Valid @RequestBody List<Long> restaurantIds) {
         log.debug("Removing Restaurants from system - Restaurant Owners");
         RestaurantOwnerDTO restaurantOwnerDTO = restaurantOwnerService.deleteRestaurants(restaurantOwnerId, restaurantIds);
         return ResponseEntity.noContent().build();

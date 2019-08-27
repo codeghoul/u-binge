@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -47,19 +48,19 @@ public class DeliveryGuyController {
     }
 
     @PostMapping(value = "/deliveryguys")
-    public ResponseEntity<DeliveryGuyDTO> saveDeliveryGuy(@RequestBody DeliveryGuyDTO deliveryGuyDTO) {
+    public ResponseEntity<DeliveryGuyDTO> saveDeliveryGuy(@Valid @RequestBody DeliveryGuyDTO deliveryGuyDTO) {
         log.debug("Saving Delivery Guy.");
         return ResponseEntity.status(HttpStatus.CREATED).body(deliveryGuyService.save(deliveryGuyDTO));
     }
 
     @PutMapping(value = "/deliveryguys/{deliveryGuyId}")
-    public ResponseEntity<DeliveryGuyDTO> updateDeliveryGuy(@RequestBody DeliveryGuyDTO deliveryGuyDTO, @PathVariable Long deliveryGuyId) {
+    public ResponseEntity<DeliveryGuyDTO> updateDeliveryGuy(@Valid @RequestBody DeliveryGuyDTO deliveryGuyDTO, @PathVariable Long deliveryGuyId) {
         log.debug("Updating Delivery Guy by id.");
         return ResponseEntity.status(HttpStatus.OK).body(deliveryGuyService.update(deliveryGuyDTO, deliveryGuyId));
     }
 
     @PutMapping(value = "/deliveryguys/{deliveryGuyId}/orders/{orderId}")
-    public ResponseEntity<OrderDTO> modifyOrder(@PathVariable Long deliveryGuyId, @PathVariable Long orderId, @RequestBody OrderModificationDTO modification) {
+    public ResponseEntity<OrderDTO> modifyOrder(@PathVariable Long deliveryGuyId, @PathVariable Long orderId,@Valid @RequestBody OrderModificationDTO modification) {
         log.debug("Modifying Delivery Guy Order.");
         return ResponseEntity.status(HttpStatus.OK).body(deliveryGuyService.modifyOrder(deliveryGuyId, orderId, modification));
     }

@@ -92,7 +92,7 @@ public class MapperUtil {
         DeliveryGuy deliveryGuy = new DeliveryGuy();
         deliveryGuy.setName(deliveryGuyDTO.getName());
         deliveryGuy.setEmail(deliveryGuyDTO.getEmail());
-        deliveryGuy.setPhoneNo(deliveryGuyDTO.getName());
+        deliveryGuy.setPhoneNo(deliveryGuyDTO.getPhoneNo());
         return deliveryGuy;
     }
 
@@ -127,6 +127,7 @@ public class MapperUtil {
     public static RestaurantOwnerDTO toRestaurantOwnerDTO(RestaurantOwner restaurantOwner) {
         RestaurantOwnerDTO restaurantOwnerDTO = new RestaurantOwnerDTO();
         restaurantOwnerDTO.setId(restaurantOwner.getId());
+        restaurantOwnerDTO.setName(restaurantOwner.getName());
         restaurantOwnerDTO.setEmail(restaurantOwner.getEmail());
         restaurantOwnerDTO.setPhoneNo(restaurantOwner.getPhoneNo());
         restaurantOwnerDTO.setRestaurantIds(getSetOfId(restaurantOwner.getRestaurants()));

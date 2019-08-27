@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -48,19 +49,19 @@ public class RestaurantController {
     }
 
     @PostMapping(value = "/restaurants/{restaurantId}/fooditems")
-    public ResponseEntity<RestaurantDTO> addFoodItems(@PathVariable Long restaurantId, @RequestBody List<FoodItemDTO> foodItemDTOs) {
+    public ResponseEntity<RestaurantDTO> addFoodItems(@PathVariable Long restaurantId, @Valid @RequestBody List<FoodItemDTO> foodItemDTOs) {
         log.debug("Adding food items to restaurants.");
         return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.addFoodItems(restaurantId, foodItemDTOs));
     }
 
     @PutMapping(value = "/restaurants/{restaurantId}/orders/{orderId}")
-    public ResponseEntity<OrderDTO> modifyOrder(@PathVariable Long restaurantId, @PathVariable Long orderId, @RequestBody OrderModificationDTO modification) {
+    public ResponseEntity<OrderDTO> modifyOrder(@PathVariable Long restaurantId, @PathVariable Long orderId, @Valid @RequestBody OrderModificationDTO modification) {
         log.debug("Modifying Customer Order.");
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.modifyOrder(restaurantId, orderId, modification));
     }
 
     @DeleteMapping(value = "/restaurants/{restaurantId}/fooditems")
-    public ResponseEntity<?> removeFoodItems(@PathVariable Long restaurantId, @RequestBody List<Long> foodItemIds) {
+    public ResponseEntity<?> removeFoodItems(@PathVariable Long restaurantId, @Valid @RequestBody List<Long> foodItemIds) {
         log.debug("Removing food items from restaurants");
         restaurantService.removeFoodItems(restaurantId, foodItemIds);
         return ResponseEntity.noContent().build();

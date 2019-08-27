@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -48,13 +49,13 @@ public class CustomerController {
     }
 
     @PostMapping(value = "/customers")
-    public ResponseEntity<CustomerDTO> saveCustomer(@RequestBody CustomerDTO customerDTO) {
+    public ResponseEntity<CustomerDTO> saveCustomer(@Valid @RequestBody CustomerDTO customerDTO) {
         log.debug("Saving Customer.");
         return ResponseEntity.status(HttpStatus.CREATED).body(customerService.save(customerDTO));
     }
 
     @PutMapping(value = "/customers/{customerId}")
-    public ResponseEntity<CustomerDTO> updateCustomer(@RequestBody CustomerDTO customerDTO, @PathVariable Long customerId) {
+    public ResponseEntity<CustomerDTO> updateCustomer(@Valid @RequestBody CustomerDTO customerDTO, @PathVariable Long customerId) {
         log.debug("Updating Customer.");
         return ResponseEntity.status(HttpStatus.OK).body(customerService.update(customerDTO, customerId));
     }
@@ -67,7 +68,7 @@ public class CustomerController {
     }
 
     @PutMapping(value = "/customers/{customerId}/orders/{orderId}")
-    public ResponseEntity<OrderDTO> modifyOrder(@PathVariable Long customerId, @PathVariable Long orderId, @RequestBody OrderModificationDTO modification) {
+    public ResponseEntity<OrderDTO> modifyOrder(@PathVariable Long customerId, @PathVariable Long orderId, @Valid @RequestBody OrderModificationDTO modification) {
         log.debug("Modifying Customer Order.");
         return ResponseEntity.status(HttpStatus.OK).body(customerService.modifyOrder(customerId, orderId, modification));
     }
