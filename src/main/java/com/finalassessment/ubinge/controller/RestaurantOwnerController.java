@@ -1,9 +1,8 @@
 package com.finalassessment.ubinge.controller;
 
-import com.finalassessment.ubinge.model.Restaurant;
-import com.finalassessment.ubinge.model.RestaurantOwner;
+import com.finalassessment.ubinge.dto.RestaurantDTO;
+import com.finalassessment.ubinge.dto.RestaurantOwnerDTO;
 import com.finalassessment.ubinge.service.RestaurantOwnerService;
-import com.finalassessment.ubinge.vo.GeneralDetailVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,46 +22,46 @@ public class RestaurantOwnerController {
     }
 
     @GetMapping(value = "/restaurantowners")
-    public ResponseEntity<List<RestaurantOwner>> getAllRestaurantOwners() {
+    public ResponseEntity<List<RestaurantOwnerDTO>> getAllRestaurantOwners() {
         log.debug("Getting all Restaurants Owners.");
         return ResponseEntity.status(HttpStatus.OK).body(restaurantOwnerService.findAll());
     }
 
     @GetMapping(value = "/restaurantowners/{restaurantOwnerId}")
-    public ResponseEntity<RestaurantOwner> getRestaurantOwner(@PathVariable Long restaurantOwnerId) {
+    public ResponseEntity<RestaurantOwnerDTO> getRestaurantOwner(@PathVariable Long restaurantOwnerId) {
         log.debug("Getting Restaurant Owner by id.");
         return ResponseEntity.status(HttpStatus.OK).body(restaurantOwnerService.findById(restaurantOwnerId));
     }
 
     @GetMapping(value = "/restaurantowners/{restaurantOwnerId}/restaurants")
-    public ResponseEntity<List<Restaurant>> getRestaurantOwnerRestaurants(@PathVariable Long restaurantOwnerId) {
+    public ResponseEntity<List<RestaurantDTO>> getRestaurantOwnerRestaurants(@PathVariable Long restaurantOwnerId) {
         log.debug("Getting Restaurant Owner by id.");
         return ResponseEntity.status(HttpStatus.OK).body(restaurantOwnerService.findAllRestaurants(restaurantOwnerId));
     }
 
     @PostMapping(value = "/restaurantowners")
-    public ResponseEntity<RestaurantOwner> saveRestaurantOwner(@RequestBody RestaurantOwner restaurantOwner) {
+    public ResponseEntity<RestaurantOwnerDTO> saveRestaurantOwner(@RequestBody RestaurantOwnerDTO restaurantOwnerDTO) {
         log.debug("Saving Restaurant Owner.");
-        return ResponseEntity.status(HttpStatus.CREATED).body(restaurantOwnerService.save(restaurantOwner));
+        return ResponseEntity.status(HttpStatus.CREATED).body(restaurantOwnerService.save(restaurantOwnerDTO));
     }
 
     @PostMapping(value = "/restaurantowners/{restaurantOwnerId}/restaurants")
-    public ResponseEntity<RestaurantOwner> saveRestaurants(@PathVariable Long restaurantOwnerId, @RequestBody List<Restaurant> restaurants) {
+    public ResponseEntity<RestaurantOwnerDTO> saveRestaurants(@PathVariable Long restaurantOwnerId, @RequestBody List<RestaurantDTO> restaurantDTOs) {
         log.debug("Adding Restaurants to system - Restaurant Owners.");
-        return ResponseEntity.status(HttpStatus.CREATED).body(restaurantOwnerService.saveRestaurants(restaurantOwnerId, restaurants));
+        return ResponseEntity.status(HttpStatus.CREATED).body(restaurantOwnerService.saveRestaurants(restaurantOwnerId, restaurantDTOs));
     }
 
 
     @PutMapping(value = "/restaurantowners/{restaurantOwnerId}")
-    public ResponseEntity<RestaurantOwner> updateRestaurantOwner(@RequestBody GeneralDetailVO generalDetailVO, @PathVariable Long restaurantOwnerId) {
+    public ResponseEntity<RestaurantOwnerDTO> updateRestaurantOwner(@RequestBody RestaurantOwnerDTO restaurantOwnerDTO, @PathVariable Long restaurantOwnerId) {
         log.debug("Updating Restaurant Owner by Restaurant id.");
-        return ResponseEntity.status(HttpStatus.OK).body(restaurantOwnerService.update(generalDetailVO, restaurantOwnerId));
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantOwnerService.update(restaurantOwnerDTO, restaurantOwnerId));
     }
 
     @PutMapping(value = "/restaurantowners/{restaurantOwnerId}/restaurants/{restaurantId}")
-    public ResponseEntity<Restaurant> updateRestaurantDetails(@RequestBody GeneralDetailVO generalDetailVO, @PathVariable Long restaurantOwnerId, @PathVariable Long restaurantId) {
+    public ResponseEntity<RestaurantDTO> updateRestaurantDetails(@RequestBody RestaurantDTO restaurantDTO, @PathVariable Long restaurantOwnerId, @PathVariable Long restaurantId) {
         log.debug("Updating Restaurant Owner by Restaurant id.");
-        return ResponseEntity.status(HttpStatus.OK).body(restaurantOwnerService.updateRestaurantDetails(generalDetailVO, restaurantOwnerId, restaurantId));
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantOwnerService.updateRestaurantDetails(restaurantDTO, restaurantOwnerId, restaurantId));
     }
 
     @DeleteMapping(value = "/restaurantowners/{restaurantOwnerId}")
@@ -75,7 +74,7 @@ public class RestaurantOwnerController {
     @DeleteMapping(value = "/restaurantowners/{restaurantOwnerId}/restaurants")
     public ResponseEntity<?> deleteRestaurants(@PathVariable Long restaurantOwnerId, @RequestBody List<Long> restaurantIds) {
         log.debug("Removing Restaurants from system - Restaurant Owners");
-        RestaurantOwner restaurantOwner = restaurantOwnerService.deleteRestaurants(restaurantOwnerId, restaurantIds);
+        RestaurantOwnerDTO restaurantOwnerDTO = restaurantOwnerService.deleteRestaurants(restaurantOwnerId, restaurantIds);
         return ResponseEntity.noContent().build();
     }
 }

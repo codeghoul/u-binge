@@ -1,5 +1,7 @@
 package com.finalassessment.ubinge.service.impl;
 
+import com.finalassessment.ubinge.dto.RestaurantDTO;
+import com.finalassessment.ubinge.dto.RestaurantOwnerDTO;
 import com.finalassessment.ubinge.exception.RestaurantNotFoundException;
 import com.finalassessment.ubinge.exception.RestaurantOwnerNotFoundException;
 import com.finalassessment.ubinge.model.Restaurant;
@@ -7,7 +9,7 @@ import com.finalassessment.ubinge.model.RestaurantOwner;
 import com.finalassessment.ubinge.repository.RestaurantOwnerRepository;
 import com.finalassessment.ubinge.repository.RestaurantRepository;
 import com.finalassessment.ubinge.service.RestaurantOwnerService;
-import com.finalassessment.ubinge.vo.GeneralDetailVO;
+import com.finalassessment.ubinge.utility.MapperUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -31,50 +33,53 @@ public class RestaurantOwnerServiceImpl implements RestaurantOwnerService {
     }
 
     @Override
-    public List<RestaurantOwner> findAll() {
+    public List<RestaurantOwnerDTO> findAll() {
         log.debug("Getting Restaurant Owners from Service.");
-        return restaurantOwnerRepository.findAll();
+        return restaurantOwnerRepository.findAll().stream().map(MapperUtil::toRestaurantOwnerDTO).collect(Collectors.toList());
     }
 
     @Override
-    public RestaurantOwner findById(Long restaurantOwnerId) {
+    public RestaurantOwnerDTO findById(Long restaurantOwnerId) {
         log.debug("Getting Restaurant Owner by Id from Service.");
-        return restaurantOwnerRepository.findById(restaurantOwnerId).orElseThrow(() -> new RestaurantOwnerNotFoundException(restaurantOwnerId));
+        return MapperUtil.toRestaurantOwnerDTO(getRestaurantOwner(restaurantOwnerId));
     }
 
     @Override
-    public List<Restaurant> findAllRestaurants(Long restaurantOwnerId) {
-        RestaurantOwner restaurantOwner = findById(restaurantOwnerId);
-        return restaurantOwner.getRestaurants().stream().collect(Collectors.toList());
+    public List<RestaurantDTO> findAllRestaurants(Long restaurantOwnerId) {
+        log.debug("Getting all Restaurants");
+        RestaurantOwner restaurantOwner = getRestaurantOwner(restaurantOwnerId);
+        List<Restaurant> restaurants = restaurantOwner.getRestaurants().stream().collect(Collectors.toList());
+        return restaurants.stream().map(MapperUtil::toRestaurantDTO).collect(Collectors.toList());
     }
 
     @Override
-    public RestaurantOwner save(RestaurantOwner newRestaurantOwner) {
+    public RestaurantOwnerDTO save(RestaurantOwnerDTO restaurantOwnerDTO) {
         log.debug("Saving Restaurant Owner from Service.");
-        return restaurantOwnerRepository.save(newRestaurantOwner);
+        RestaurantOwner restaurantOwner = MapperUtil.toRestaurantOwner(restaurantOwnerDTO);
+        return MapperUtil.toRestaurantOwnerDTO(restaurantOwnerRepository.save(restaurantOwner));
     }
 
     @Override
-    public RestaurantOwner update(GeneralDetailVO generalDetailVO, Long restaurantOwnerId) {
+    public RestaurantOwnerDTO update(RestaurantOwnerDTO restaurantOwnerDTO, Long restaurantOwnerId) {
         log.debug("Updating Restaurant Owner from Service.");
-        RestaurantOwner restaurantOwner = findById(restaurantOwnerId);
-        restaurantOwner.setName(generalDetailVO.getName());
-        restaurantOwner.setEmail(generalDetailVO.getEmail());
-        restaurantOwner.setPhoneNo(generalDetailVO.getPhoneNo());
-        return restaurantOwnerRepository.saveAndFlush(restaurantOwner);
+        RestaurantOwner restaurantOwner = getRestaurantOwner(restaurantOwnerId);
+        restaurantOwner.setName(restaurantOwnerDTO.getName());
+        restaurantOwner.setEmail(restaurantOwnerDTO.getEmail());
+        restaurantOwner.setPhoneNo(restaurantOwnerDTO.getPhoneNo());
+        return MapperUtil.toRestaurantOwnerDTO(restaurantOwnerRepository.saveAndFlush(restaurantOwner));
     }
 
     @Override
-    public Restaurant updateRestaurantDetails(GeneralDetailVO generalDetailVO, Long restaurantOwnerId, Long restaurantId) {
-        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new RestaurantNotFoundException(restaurantId));
-        RestaurantOwner restaurantOwner = findById(restaurantOwnerId);
+    public RestaurantDTO updateRestaurantDetails(RestaurantDTO restaurantDTO, Long restaurantOwnerId, Long restaurantId) {
+        Restaurant restaurant = getRestaurant(restaurantId);
+        RestaurantOwner restaurantOwner = getRestaurantOwner(restaurantOwnerId);
         if (!restaurantOwner.getRestaurants().contains(restaurant)) {
             throw new IllegalArgumentException("You don't own restaurant: " + restaurant.getName());
         }
-        restaurant.setName(generalDetailVO.getName());
-        restaurant.setEmail(generalDetailVO.getEmail());
-        restaurant.setPhoneNo(generalDetailVO.getPhoneNo());
-        return restaurantRepository.saveAndFlush(restaurant);
+        restaurant.setName(restaurantDTO.getName());
+        restaurant.setEmail(restaurantDTO.getEmail());
+        restaurant.setPhoneNo(restaurantDTO.getPhoneNo());
+        return MapperUtil.toRestaurantDTO(restaurantRepository.saveAndFlush(restaurant));
     }
 
     @Override
@@ -84,23 +89,32 @@ public class RestaurantOwnerServiceImpl implements RestaurantOwnerService {
     }
 
     @Override
-    public RestaurantOwner saveRestaurants(Long restaurantOwnerId, @NotNull List<Restaurant> restaurants) {
+    public RestaurantOwnerDTO saveRestaurants(Long restaurantOwnerId, @NotNull List<RestaurantDTO> restaurantDTOs) {
         log.debug("Adding Restaurant Owner to Restaurants and Vice Versa from Service.");
-        RestaurantOwner restaurantOwner = findById(restaurantOwnerId);
-        restaurants.stream().forEach(restaurant -> {
+        RestaurantOwner restaurantOwner = getRestaurantOwner(restaurantOwnerId);
+        restaurantDTOs.stream().forEach(restaurantDTO -> {
+            Restaurant restaurant = MapperUtil.toRestaurant(restaurantDTO);
             restaurant.setRestaurantOwner(restaurantOwner);
             restaurantRepository.save(restaurant);
         });
-        return restaurantOwnerRepository.save(restaurantOwner);
+        return MapperUtil.toRestaurantOwnerDTO(restaurantOwner);
     }
 
     @Override
-    public RestaurantOwner deleteRestaurants(Long restaurantOwnerId, List<Long> restaurantIds) {
+    public RestaurantOwnerDTO deleteRestaurants(Long restaurantOwnerId, List<Long> restaurantIds) {
+        //TODO: possible security breach.
         log.debug("Removing Restaurants from Restaurant Owner and Vice Versa from Service.");
-        RestaurantOwner restaurantOwner = findById(restaurantOwnerId);
+        RestaurantOwner restaurantOwner = getRestaurantOwner(restaurantOwnerId);
         List<Restaurant> restaurants = restaurantRepository.findAllById(restaurantIds);
         restaurantRepository.deleteAll(restaurants);
-//        restaurants.stream().forEach(restaurantRepository::delete);
-        return restaurantOwner;
+        return MapperUtil.toRestaurantOwnerDTO(restaurantOwner);
+    }
+
+    private RestaurantOwner getRestaurantOwner(Long restaurantOwnerId) {
+        return restaurantOwnerRepository.findById(restaurantOwnerId).orElseThrow(() -> new RestaurantOwnerNotFoundException(restaurantOwnerId));
+    }
+
+    private Restaurant getRestaurant(Long restaurantId) {
+        return restaurantRepository.findById(restaurantId).orElseThrow(() -> new RestaurantNotFoundException(restaurantId));
     }
 }

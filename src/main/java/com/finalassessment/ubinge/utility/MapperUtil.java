@@ -122,4 +122,21 @@ public class MapperUtil {
         restaurantDTO.setFoodItemIds(getSetOfId(restaurant.getFoodItems()));
         return restaurantDTO;
     }
+
+    public static RestaurantOwnerDTO toRestaurantOwnerDTO(RestaurantOwner restaurantOwner) {
+        RestaurantOwnerDTO restaurantOwnerDTO = new RestaurantOwnerDTO();
+        restaurantOwnerDTO.setId(restaurantOwner.getId());
+        restaurantOwnerDTO.setEmail(restaurantOwner.getEmail());
+        restaurantOwnerDTO.setPhoneNo(restaurantOwner.getPhoneNo());
+        restaurantOwnerDTO.setRestaurantIds(getSetOfId(restaurantOwner.getRestaurants()));
+        return restaurantOwnerDTO;
+    }
+
+    public static RestaurantOwner toRestaurantOwner(RestaurantOwnerDTO restaurantOwnerDTO) {
+        RestaurantOwner restaurantOwner = new RestaurantOwner();
+        restaurantOwner.setName(restaurantOwnerDTO.getName());
+        restaurantOwner.setEmail(restaurantOwnerDTO.getEmail());
+        restaurantOwner.setPhoneNo(restaurantOwnerDTO.getPhoneNo());
+        return restaurantOwner;
+    }
 }

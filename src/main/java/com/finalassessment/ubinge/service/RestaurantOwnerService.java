@@ -1,19 +1,18 @@
 package com.finalassessment.ubinge.service;
 
-import com.finalassessment.ubinge.model.Restaurant;
-import com.finalassessment.ubinge.model.RestaurantOwner;
-import com.finalassessment.ubinge.vo.GeneralDetailVO;
+import com.finalassessment.ubinge.dto.RestaurantDTO;
+import com.finalassessment.ubinge.dto.RestaurantOwnerDTO;
 
 import java.util.List;
 
-public interface RestaurantOwnerService extends CrudService<RestaurantOwner, Long> {
-    RestaurantOwner saveRestaurants(Long restaurantOwnerId, List<Restaurant> restaurants);
+public interface RestaurantOwnerService extends CrudService<RestaurantOwnerDTO, Long> {
+    RestaurantOwnerDTO saveRestaurants(Long restaurantOwnerId, List<RestaurantDTO> restaurantDTOs);
 
-    RestaurantOwner deleteRestaurants(Long restaurantOwnerId, List<Long> restaurantIds);
+    RestaurantOwnerDTO deleteRestaurants(Long restaurantOwnerId, List<Long> restaurantIds);
 
-    RestaurantOwner update(GeneralDetailVO generalDetailVO, Long restaurantOwnerId);
+    RestaurantOwnerDTO update(RestaurantOwnerDTO restaurantOwnerDTO, Long restaurantOwnerId);
 
-    Restaurant updateRestaurantDetails(GeneralDetailVO generalDetailVO, Long restaurantOwnerId, Long restaurantId);
+    RestaurantDTO updateRestaurantDetails(RestaurantDTO restaurantDTO, Long restaurantOwnerId, Long restaurantId);
 
-    List<Restaurant> findAllRestaurants(Long restaurantOwnerId);
+    List<RestaurantDTO> findAllRestaurants(Long restaurantOwnerId);
 }
