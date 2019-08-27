@@ -26,5 +26,5 @@ public class OrderDTO extends BaseEntityDTO {
 
     private Double totalPrice;
 
-    private Set<Long> orderFoodItems = new HashSet<>();
+    private Set<OrderFoodItemDTO> orderFoodItemDTOs = new HashSet<>();
 }

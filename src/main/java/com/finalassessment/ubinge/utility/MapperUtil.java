@@ -3,6 +3,7 @@ package com.finalassessment.ubinge.utility;
 import com.finalassessment.ubinge.dto.*;
 import com.finalassessment.ubinge.model.*;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -56,7 +57,6 @@ public class MapperUtil {
         orderFoodItemDTO.setId(orderFoodItem.getId());
         orderFoodItemDTO.setQuantity(orderFoodItem.getQuantity());
         orderFoodItemDTO.setTotalPrice(orderFoodItem.getTotalPrice());
-        orderFoodItemDTO.setOrderId(orderFoodItem.getOrder().getId());
         orderFoodItemDTO.setFoodItemId(orderFoodItem.getFoodItem().getId());
         return orderFoodItemDTO;
     }
@@ -70,16 +70,17 @@ public class MapperUtil {
         orderDTO.setPaymentMode(order.getPaymentMode());
         orderDTO.setTimestamp(order.getTimestamp());
         orderDTO.setTotalPrice(order.getTotalPrice());
-        orderDTO.setOrderFoodItems(getSetOfId(order.getOrderFoodItems()));
+        Set<OrderFoodItemDTO> orderFoodItemDTOs = order.getOrderFoodItems().stream()
+                .map(MapperUtil::toOrderFoodItemDTO).collect(Collectors.toSet());
+        orderDTO.setOrderFoodItemDTOs(orderFoodItemDTOs);
         orderDTO.setId(order.getId());
         return orderDTO;
     }
 
     public static Order toOrder(OrderDTO orderDTO) {
         Order order = new Order();
-        order.setOrderStatus(orderDTO.getOrderStatus());
-        order.setTotalPrice(orderDTO.getTotalPrice());
-        order.setTimestamp(orderDTO.getTimestamp());
+        order.setPaymentMode(orderDTO.getPaymentMode());
+        order.setTimestamp(LocalDateTime.now());
         return order;
     }
 

@@ -1,8 +1,7 @@
 package com.finalassessment.ubinge.controller;
 
-import com.finalassessment.ubinge.model.Order;
+import com.finalassessment.ubinge.dto.OrderDTO;
 import com.finalassessment.ubinge.service.OrderService;
-import com.finalassessment.ubinge.vo.OrderVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,8 +21,8 @@ public class OrderController {
     }
 
     @PostMapping("/orders")
-    public ResponseEntity<Order> createOrder(@RequestBody OrderVO orderVO) {
+    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) {
         log.debug("Creating new Order.");
-        return ResponseEntity.status(HttpStatus.OK).body(orderService.createOrder(orderVO));
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.createOrder(orderDTO));
     }
 }

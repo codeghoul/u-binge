@@ -1,8 +1,7 @@
 package com.finalassessment.ubinge.service;
 
-import com.finalassessment.ubinge.model.Order;
-import com.finalassessment.ubinge.vo.OrderVO;
+import com.finalassessment.ubinge.dto.OrderDTO;
 
-public interface OrderService extends CrudService<Order, Long> {
-    Order createOrder(OrderVO orderVO);
+public interface OrderService extends CrudService<OrderDTO, Long> {
+    OrderDTO createOrder(OrderDTO orderDTO);
 }

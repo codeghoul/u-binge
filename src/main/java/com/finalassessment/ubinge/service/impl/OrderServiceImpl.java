@@ -1,18 +1,21 @@
 package com.finalassessment.ubinge.service.impl;
 
 import com.finalassessment.ubinge.constants.OrderStatus;
-import com.finalassessment.ubinge.exception.*;
+import com.finalassessment.ubinge.dto.OrderDTO;
+import com.finalassessment.ubinge.dto.OrderFoodItemDTO;
+import com.finalassessment.ubinge.exception.CustomerNotFoundException;
+import com.finalassessment.ubinge.exception.FoodItemNotFoundException;
+import com.finalassessment.ubinge.exception.PriceMismatchException;
+import com.finalassessment.ubinge.exception.RestaurantNotFoundException;
 import com.finalassessment.ubinge.model.*;
 import com.finalassessment.ubinge.repository.*;
 import com.finalassessment.ubinge.service.OrderService;
-import com.finalassessment.ubinge.vo.OrderFoodItemVO;
-import com.finalassessment.ubinge.vo.OrderVO;
+import com.finalassessment.ubinge.utility.MapperUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -40,65 +43,40 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> findAll() {
-        log.debug("Getting Orders from Service.");
-        return orderRepository.findAll();
-    }
-
-    @Override
-    public Order findById(Long orderId) {
-        log.debug("Getting Order by Id from Service.");
-        return orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
-    }
-
-    @Override
-    public Order save(Order newOrder) {
-        log.debug("Saving order from Service.");
-        return orderRepository.save(newOrder);
-    }
-
-    public Order update(Order order, Long orderId) {
-        log.debug("Updating Order from Service.");
+    public List<OrderDTO> findAll() {
         return null;
     }
 
     @Override
-    public void deleteById(Long orderId) {
-        log.debug("Deleting order by id from Service.");
-        orderRepository.deleteById(orderId);
+    public OrderDTO findById(Long orderId) {
+        return null;
     }
 
     @Override
-    public Order createOrder(OrderVO orderVO) {
-        //TODO: break create order into multi small modules. If possible move error throwing in controller.
-        log.debug("Create new order.");
-        Order order = toOrder(orderVO);
-
-        List<OrderFoodItem> orderFoodItems = orderVO.getOrderFoodItemVOs().stream()
-                .map(orderFoodItemVO -> toOrderFoodItem(orderFoodItemVO)).collect(Collectors.toList());
-
-        Double totalPrice = 0.0;
-
-        for (OrderFoodItem orderFoodItem : orderFoodItems) {
-            totalPrice += orderFoodItem.getTotalPrice();
-        }
-
-        if (BigDecimal.valueOf(totalPrice).compareTo(BigDecimal.valueOf(orderVO.getTotalPrice())) != 0) {
-            throw new PriceMismatchException("Total Price for this order should be " + totalPrice + " but found " + orderVO.getTotalPrice());
-        }
-
-        order.setTotalPrice(totalPrice);
-        orderRepository.save(order);
-        orderFoodItems.forEach(orderFoodItem -> orderFoodItem.setOrder(order));
-
-
-        orderFoodItemRepository.saveAll(orderFoodItems);
-        return order;
+    public OrderDTO save(OrderDTO orderDTO) {
+//        log.debug("Saving order from Service.");
+//        return orderRepository.save(newOrder);
+        return null;
     }
 
-    private Order toOrder(OrderVO orderVO) {
-        Long customerId = orderVO.getCustomerId();
-        Long restaurantId = orderVO.getRestaurantId();
+//    public Order update(Order order, Long orderId) {
+//        log.debug("Updating Order from Service.");
+//        return null;
+//    }
+
+    @Override
+    public void deleteById(Long orderId) {
+//        log.debug("Deleting order by id from Service.");
+//        orderRepository.deleteById(orderId);
+    }
+
+    @Override
+    public OrderDTO createOrder(OrderDTO orderDTO) {
+        //TODO: break create order into multi small modules. If possible move error throwing in controller.
+        log.debug("Create new order.");
+
+        Long customerId = orderDTO.getCustomerId();
+        Long restaurantId = orderDTO.getRestaurantId();
 
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException(customerId));
@@ -106,27 +84,43 @@ public class OrderServiceImpl implements OrderService {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new RestaurantNotFoundException(restaurantId));
 
-        Order order = new Order();
+        Order order = MapperUtil.toOrder(orderDTO);
+
         order.setCustomer(customer);
         order.setRestaurant(restaurant);
         order.setDeliveryGuy(getDeliveryGuy());
-        order.setOrderStatus(OrderStatus.APPROVED);
-        order.setPaymentMode(orderVO.getPaymentMode());
-        order.setTimestamp(LocalDateTime.now());
 
-        return order;
+        List<OrderFoodItem> orderFoodItems = orderDTO.getOrderFoodItemDTOs().stream()
+                .map(orderFoodItemDTO -> toOrderFoodItem(orderFoodItemDTO)).collect(Collectors.toList());
+
+        Double totalPrice = 0.0;
+
+        for (OrderFoodItem orderFoodItem : orderFoodItems) {
+            totalPrice += orderFoodItem.getTotalPrice();
+        }
+
+        if (BigDecimal.valueOf(totalPrice).compareTo(BigDecimal.valueOf(orderDTO.getTotalPrice())) != 0) {
+            throw new PriceMismatchException("Total Price for this order should be " + totalPrice + " but found " + orderDTO.getTotalPrice());
+        }
+
+        order.setTotalPrice(totalPrice);
+        order.setOrderStatus(OrderStatus.APPROVED);
+        orderRepository.save(order);
+        orderFoodItems.forEach(orderFoodItem -> orderFoodItem.setOrder(order));
+        orderFoodItemRepository.saveAll(orderFoodItems);
+        return MapperUtil.toOrderDTO(order);
     }
 
-    private OrderFoodItem toOrderFoodItem(OrderFoodItemVO orderFoodItemVo) {
+    private OrderFoodItem toOrderFoodItem(OrderFoodItemDTO orderFoodItemDTO) {
         log.debug("Converting orderFoodItemVo into orderFoodItem");
         OrderFoodItem orderFoodItem = new OrderFoodItem();
-        Long foodItemId = orderFoodItemVo.getFoodItemId();
+        Long foodItemId = orderFoodItemDTO.getFoodItemId();
         FoodItem foodItem = foodItemRepository.findById(foodItemId).orElseThrow(() -> new FoodItemNotFoundException(foodItemId));
         orderFoodItem.setFoodItem(foodItem);
-        orderFoodItem.setQuantity(orderFoodItemVo.getQuantity());
-        Double totalPrice = orderFoodItemVo.getQuantity() * foodItem.getPrice();
-        if (BigDecimal.valueOf(totalPrice).compareTo(BigDecimal.valueOf(orderFoodItemVo.getTotalPrice())) != 0) {
-            throw new PriceMismatchException("Total Price for " + foodItem.getName() + " should be " + totalPrice + " but found " + orderFoodItemVo.getTotalPrice());
+        orderFoodItem.setQuantity(orderFoodItemDTO.getQuantity());
+        Double totalPrice = orderFoodItemDTO.getQuantity() * foodItem.getPrice();
+        if (BigDecimal.valueOf(totalPrice).compareTo(BigDecimal.valueOf(orderFoodItemDTO.getTotalPrice())) != 0) {
+            throw new PriceMismatchException("Total Price for " + foodItem.getName() + " should be " + totalPrice + " but found " + orderFoodItemDTO.getTotalPrice());
         }
         orderFoodItem.setTotalPrice(totalPrice);
         return orderFoodItem;
