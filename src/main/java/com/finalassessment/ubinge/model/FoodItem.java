@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity(name = "FoodItem")
-@Table(name = "food_item")
+@Table(name = "food_item", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})})
 public class FoodItem extends BaseEntity {
     @Column
     private String name;
