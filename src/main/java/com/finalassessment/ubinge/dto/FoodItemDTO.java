@@ -8,5 +8,5 @@ import lombok.Setter;
 public class FoodItemDTO extends BaseEntityDTO {
     private String name;
     private Double price;
-    private RestaurantDTO restaurant;
+    private Long restaurantId;
 }

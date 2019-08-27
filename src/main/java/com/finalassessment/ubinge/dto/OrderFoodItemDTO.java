@@ -6,8 +6,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OrderFoodItemDTO extends BaseEntityDTO {
-    private FoodItemDTO foodItem;
-    private OrderDTO order;
+    private Long foodItemId;
+    private Long orderId;
     private Integer quantity;
     private Double totalPrice;
 }

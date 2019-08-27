@@ -12,11 +12,11 @@ import java.util.Set;
 @Getter
 @Setter
 public class OrderDTO extends BaseEntityDTO {
-    private CustomerDTO customer;
+    private Long customerId;
 
-    private DeliveryGuyDTO deliveryGuy;
+    private Long deliveryGuyId;
 
-    private RestaurantDTO restaurant;
+    private Long restaurantId;
 
     private LocalDateTime timestamp;
 
@@ -26,5 +26,5 @@ public class OrderDTO extends BaseEntityDTO {
 
     private Double totalPrice;
 
-    private Set<OrderFoodItemDTO> orderFoodItems = new HashSet<>();
+    private Set<Long> orderFoodItems = new HashSet<>();
 }
