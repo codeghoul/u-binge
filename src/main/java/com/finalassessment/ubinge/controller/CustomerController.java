@@ -1,13 +1,8 @@
 package com.finalassessment.ubinge.controller;
 
 import com.finalassessment.ubinge.dto.CustomerDTO;
-import com.finalassessment.ubinge.mapper.CustomerContext;
-import com.finalassessment.ubinge.mapper.CustomerMapper;
-import com.finalassessment.ubinge.model.Customer;
-import com.finalassessment.ubinge.model.Order;
+import com.finalassessment.ubinge.dto.OrderDTO;
 import com.finalassessment.ubinge.service.CustomerService;
-import com.finalassessment.ubinge.vo.GeneralDetailVO;
-import com.finalassessment.ubinge.vo.OrderModificationVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +15,6 @@ import java.util.List;
 @RestController
 public class CustomerController {
     private CustomerService customerService;
-    private CustomerContext customerContext = new CustomerContext(null);
 
     @Autowired
     public CustomerController(CustomerService customerService) {
@@ -28,53 +22,40 @@ public class CustomerController {
     }
 
     @GetMapping(value = "/customers")
-    public ResponseEntity<List<Customer>> getAllCustomers() {
+    public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
         log.debug("Getting All Customers.");
         return ResponseEntity.status(HttpStatus.OK).body(customerService.findAll());
     }
 
     @GetMapping(value = "/customers/{customerId}")
-    public ResponseEntity<Customer> getCustomer(@PathVariable Long customerId) {
+    public ResponseEntity<CustomerDTO> getCustomer(@PathVariable Long customerId) {
         log.debug("Getting Customers By Id.");
-        return ResponseEntity.status(HttpStatus.OK).body(customerService.findById(customerId));
+        CustomerDTO customerDTO = customerService.findById(customerId);
+        return ResponseEntity.status(HttpStatus.OK).body(customerDTO);
     }
 
     @GetMapping(value = "/customers/{customerId}/orders")
-    public ResponseEntity<List<Order>> getCustomerOrders(@PathVariable Long customerId) {
+    public ResponseEntity<List<OrderDTO>> getCustomerOrders(@PathVariable Long customerId) {
         log.debug("Getting Customer Orders.");
         return ResponseEntity.status(HttpStatus.OK).body(customerService.getCustomerOrders(customerId));
     }
 
+
     @GetMapping(value = "/customer/{customerId}/orders/{orderId}")
-    public ResponseEntity<Order> getCustomerOrderById(@PathVariable Long customerId, @PathVariable Long orderId) {
+    public ResponseEntity<OrderDTO> getCustomerOrderById(@PathVariable Long customerId, @PathVariable Long orderId) {
         return ResponseEntity.status(HttpStatus.OK).body(customerService.getCustomerOrderById(customerId, orderId));
     }
 
     @PostMapping(value = "/customers")
-    public ResponseEntity<Customer> saveCustomer(@RequestBody CustomerDTO customerDTO) {
+    public ResponseEntity<CustomerDTO> saveCustomer(@RequestBody CustomerDTO customerDTO) {
         log.debug("Saving Customer.");
-        Customer customer = CustomerMapper.CUSTOMER_MAPPER.toEntity(customerDTO, customerContext);
-        customerService.save(customer);
-        return ResponseEntity.status(HttpStatus.CREATED).body(customerService.save(customer));
+        return ResponseEntity.status(HttpStatus.CREATED).body(customerService.save(customerDTO));
     }
 
     @PutMapping(value = "/customers/{customerId}")
-    public ResponseEntity<Customer> updateCustomer(@RequestBody GeneralDetailVO generalDetailVO, @PathVariable Long customerId) {
+    public ResponseEntity<CustomerDTO> updateCustomer(@RequestBody CustomerDTO customerDTO, @PathVariable Long customerId) {
         log.debug("Updating Customer.");
-        return ResponseEntity.status(HttpStatus.OK).body(customerService.update(generalDetailVO, customerId));
-    }
-
-    @PutMapping(value = "/customers/{customerId}/orders/{orderId}")
-    public ResponseEntity<Order> modifyOrder(@PathVariable Long customerId, @PathVariable Long orderId, @RequestBody OrderModificationVO modification) {
-        log.debug("Modifying Customer Order.");
-        return ResponseEntity.status(HttpStatus.OK).body(customerService.modifyOrder(customerId, orderId, modification));
-    }
-
-    @DeleteMapping(value = "/customers")
-    public ResponseEntity<?> deleteCustomer(@RequestBody Customer customer) {
-        log.debug("Deleting Customer.");
-        customerService.delete(customer);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(HttpStatus.OK).body(customerService.update(customerDTO, customerId));
     }
 
     @DeleteMapping(value = "/customers/{customerId}")
@@ -83,4 +64,17 @@ public class CustomerController {
         customerService.deleteById(customerId);
         return ResponseEntity.noContent().build();
     }
+
+//    @PutMapping(value = "/customers/{customerId}/orders/{orderId}")
+//    public ResponseEntity<Order> modifyOrder(@PathVariable Long customerId, @PathVariable Long orderId, @RequestBody OrderModificationVO modification) {
+//        log.debug("Modifying Customer Order.");
+//        return ResponseEntity.status(HttpStatus.OK).body(customerService.modifyOrder(customerId, orderId, modification));
+//    }
+//
+//    @DeleteMapping(value = "/customers")
+//    public ResponseEntity<?> deleteCustomer(@RequestBody Customer customer) {
+//        log.debug("Deleting Customer.");
+//        customerService.delete(customer);
+//        return ResponseEntity.noContent().build();
+//    }
 }

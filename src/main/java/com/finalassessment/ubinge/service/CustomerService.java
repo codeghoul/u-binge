@@ -1,18 +1,14 @@
 package com.finalassessment.ubinge.service;
 
-import com.finalassessment.ubinge.model.Customer;
-import com.finalassessment.ubinge.model.Order;
-import com.finalassessment.ubinge.vo.GeneralDetailVO;
-import com.finalassessment.ubinge.vo.OrderModificationVO;
+import com.finalassessment.ubinge.dto.CustomerDTO;
+import com.finalassessment.ubinge.dto.OrderDTO;
 
 import java.util.List;
 
-public interface CustomerService extends CrudService<Customer, Long> {
-    List<Order> getCustomerOrders(Long customerId);
+public interface CustomerService extends CrudService<CustomerDTO, Long> {
+    CustomerDTO update(CustomerDTO customerDTO, Long customerId);
 
-    Order modifyOrder(Long customerId, Long orderId, OrderModificationVO modification);
+    List<OrderDTO> getCustomerOrders(Long customerId);
 
-    Order getCustomerOrderById(Long customerId, Long orderId);
-
-    Customer update(GeneralDetailVO generalDetailVO, Long customerId);
+    OrderDTO getCustomerOrderById(Long customerId, Long orderId);
 }
