@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Entity(name = "FoodItem")
 @Table(name = "food_item", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})})
 public class FoodItem extends BaseEntity {
-    @Column
+    @Column(length = 25)
     private String name;
 
     @Column
