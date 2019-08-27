@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
@@ -78,10 +79,9 @@ public class OrderServiceImpl implements OrderService {
         //TODO: break create order into multi small modules. If possible move error throwing in controller.
         log.debug("Create new order.");
         Order order = toOrder(orderVO);
-        orderRepository.save(order);
 
-        List<OrderFoodItem> orderFoodItems = orderVO.getOrderFoodItemVOS().stream()
-                .map(orderFoodItemVO -> toOrderFood(orderFoodItemVO)).collect(Collectors.toList());
+        List<OrderFoodItem> orderFoodItems = orderVO.getOrderFoodItemVOs().stream()
+                .map(orderFoodItemVO -> toOrderFoodItem(orderFoodItemVO)).collect(Collectors.toList());
 
         Double totalPrice = 0.0;
 
@@ -89,12 +89,12 @@ public class OrderServiceImpl implements OrderService {
             totalPrice += orderFoodItem.getTotalPrice();
         }
 
-        if (totalPrice != orderVO.getTotalPrice()) {
+        if (BigDecimal.valueOf(totalPrice).compareTo(BigDecimal.valueOf(orderVO.getTotalPrice())) != 0) {
             throw new PriceMismatchException("Total Price for this order should be " + totalPrice + " but found " + orderVO.getTotalPrice());
         }
 
         order.setTotalPrice(totalPrice);
-
+        orderRepository.save(order);
         orderFoodItems.forEach(orderFoodItem -> orderFoodItem.setOrder(order));
 
 
@@ -123,7 +123,7 @@ public class OrderServiceImpl implements OrderService {
         return order;
     }
 
-    private OrderFoodItem toOrderFood(OrderFoodItemVO orderFoodItemVo) {
+    private OrderFoodItem toOrderFoodItem(OrderFoodItemVO orderFoodItemVo) {
         log.debug("Converting orderFoodItemVo into orderFoodItem");
         OrderFoodItem orderFoodItem = new OrderFoodItem();
         Long foodItemId = orderFoodItemVo.getFoodItemId();
@@ -131,7 +131,7 @@ public class OrderServiceImpl implements OrderService {
         orderFoodItem.setFoodItem(foodItem);
         orderFoodItem.setQuantity(orderFoodItemVo.getQuantity());
         Double totalPrice = orderFoodItemVo.getQuantity() * foodItem.getPrice();
-        if (totalPrice != orderFoodItemVo.getTotalPrice()) {
+        if (BigDecimal.valueOf(totalPrice).compareTo(BigDecimal.valueOf(orderFoodItemVo.getTotalPrice())) != 0) {
             throw new PriceMismatchException("Total Price for " + foodItem.getName() + " should be " + totalPrice + " but found " + orderFoodItemVo.getTotalPrice());
         }
         orderFoodItem.setTotalPrice(totalPrice);
