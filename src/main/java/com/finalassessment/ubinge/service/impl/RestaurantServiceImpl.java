@@ -110,7 +110,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     public OrderDTO modifyOrder(Long restaurantId, Long orderId, OrderModificationDTO modification) {
         //TODO: check working.
         Restaurant restaurant = getRestaurant(restaurantId);
-        Order order =  getOrder(orderId);
+        Order order = getOrder(orderId);
 
         if (!restaurant.getOrders().contains(order)) {
             throw new RestaurantNotFoundException(restaurantId);

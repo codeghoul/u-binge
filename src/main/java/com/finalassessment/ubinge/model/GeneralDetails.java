@@ -12,4 +12,6 @@ public abstract class GeneralDetails extends BaseEntity {
     private String name;
     private String phoneNo;
     private String email;
+    private String role;
+    private String password;
 }

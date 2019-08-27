@@ -2,11 +2,9 @@ package com.finalassessment.ubinge.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 
 @Getter
 @Setter
@@ -21,4 +19,10 @@ public abstract class GeneralDetailsDTO extends BaseEntityDTO {
     @NotNull(message = "Email field cannot be null.")
     @Email(message = "Enter a valid Email address.")
     private String email;
+
+    @Length(min = 5, message = "*Your password must have at least 5 characters")
+    @NotEmpty(message = "*Please provide your password")
+    private String password;
+
+    private String role;
 }

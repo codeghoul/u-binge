@@ -35,7 +35,7 @@ public class RestaurantOwnerServiceImpl implements RestaurantOwnerService {
     @Override
     public List<RestaurantOwnerDTO> findAll() {
         log.debug("Getting Restaurant Owners from Service.");
-        return restaurantOwnerRepository.findAll().stream().map(MapperUtil::toRestaurantOwnerDTO).collect(Collectors.toList());
+        return restaurantOwnerRepository.findAll().stream().map(MapperUtil :: toRestaurantOwnerDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -49,7 +49,7 @@ public class RestaurantOwnerServiceImpl implements RestaurantOwnerService {
         log.debug("Getting all Restaurants");
         RestaurantOwner restaurantOwner = getRestaurantOwner(restaurantOwnerId);
         List<Restaurant> restaurants = restaurantOwner.getRestaurants().stream().collect(Collectors.toList());
-        return restaurants.stream().map(MapperUtil::toRestaurantDTO).collect(Collectors.toList());
+        return restaurants.stream().map(MapperUtil :: toRestaurantDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -66,6 +66,8 @@ public class RestaurantOwnerServiceImpl implements RestaurantOwnerService {
         restaurantOwner.setName(restaurantOwnerDTO.getName());
         restaurantOwner.setEmail(restaurantOwnerDTO.getEmail());
         restaurantOwner.setPhoneNo(restaurantOwnerDTO.getPhoneNo());
+        restaurantOwner.setPassword(restaurantOwnerDTO.getPassword());
+        restaurantOwner.setRole("OWNER");
         return MapperUtil.toRestaurantOwnerDTO(restaurantOwnerRepository.saveAndFlush(restaurantOwner));
     }
 
@@ -79,6 +81,8 @@ public class RestaurantOwnerServiceImpl implements RestaurantOwnerService {
         restaurant.setName(restaurantDTO.getName());
         restaurant.setEmail(restaurantDTO.getEmail());
         restaurant.setPhoneNo(restaurantDTO.getPhoneNo());
+        restaurant.setPassword(restaurantDTO.getPassword());
+        restaurant.setRole("RESTRO");
         return MapperUtil.toRestaurantDTO(restaurantRepository.saveAndFlush(restaurant));
     }
 

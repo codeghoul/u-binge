@@ -60,7 +60,7 @@ public class DeliveryGuyController {
     }
 
     @PutMapping(value = "/deliveryguys/{deliveryGuyId}/orders/{orderId}")
-    public ResponseEntity<OrderDTO> modifyOrder(@PathVariable Long deliveryGuyId, @PathVariable Long orderId,@Valid @RequestBody OrderModificationDTO modification) {
+    public ResponseEntity<OrderDTO> modifyOrder(@PathVariable Long deliveryGuyId, @PathVariable Long orderId, @Valid @RequestBody OrderModificationDTO modification) {
         log.debug("Modifying Delivery Guy Order.");
         return ResponseEntity.status(HttpStatus.OK).body(deliveryGuyService.modifyOrder(deliveryGuyId, orderId, modification));
     }

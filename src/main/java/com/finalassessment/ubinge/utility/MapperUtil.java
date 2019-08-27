@@ -13,6 +13,8 @@ public class MapperUtil {
         customer.setName(customerDTO.getName());
         customer.setPhoneNo(customerDTO.getPhoneNo());
         customer.setEmail(customerDTO.getEmail());
+        customer.setPassword(customerDTO.getPassword());
+        customer.setRole("USER");
         return customer;
     }
 
@@ -22,6 +24,7 @@ public class MapperUtil {
         customerDTO.setEmail(customer.getEmail());
         customerDTO.setName(customer.getName());
         customerDTO.setPhoneNo(customer.getPhoneNo());
+        customerDTO.setRole(customer.getRole());
         customerDTO.setOrderIds(getSetOfId(customer.getOrders()));
         return customerDTO;
     }
@@ -71,7 +74,7 @@ public class MapperUtil {
         orderDTO.setTimestamp(order.getTimestamp());
         orderDTO.setTotalPrice(order.getTotalPrice());
         Set<OrderFoodItemDTO> orderFoodItemDTOs = order.getOrderFoodItems().stream()
-                .map(MapperUtil::toOrderFoodItemDTO).collect(Collectors.toSet());
+                .map(MapperUtil :: toOrderFoodItemDTO).collect(Collectors.toSet());
         orderDTO.setOrderFoodItemDTOs(orderFoodItemDTOs);
         orderDTO.setId(order.getId());
         return orderDTO;
@@ -85,7 +88,7 @@ public class MapperUtil {
     }
 
     private static Set<Long> getSetOfId(Set<? extends BaseEntity> objects) {
-        return objects.stream().map(object -> ((BaseEntity) object).getId()).collect(Collectors.toSet());
+        return objects.stream().map(object -> object.getId()).collect(Collectors.toSet());
     }
 
     public static DeliveryGuy toDeliveryGuy(DeliveryGuyDTO deliveryGuyDTO) {
@@ -93,15 +96,20 @@ public class MapperUtil {
         deliveryGuy.setName(deliveryGuyDTO.getName());
         deliveryGuy.setEmail(deliveryGuyDTO.getEmail());
         deliveryGuy.setPhoneNo(deliveryGuyDTO.getPhoneNo());
+        deliveryGuy.setPassword(deliveryGuyDTO.getPassword());
+        deliveryGuy.setRole("DELIVERY");
         return deliveryGuy;
     }
 
     public static DeliveryGuyDTO toDeliveryGuyDTO(DeliveryGuy deliveryGuy) {
+        //TODO: use code reuse. this is duplicate code.
         DeliveryGuyDTO deliveryGuyDTO = new DeliveryGuyDTO();
         deliveryGuyDTO.setId(deliveryGuy.getId());
         deliveryGuyDTO.setEmail(deliveryGuy.getEmail());
         deliveryGuyDTO.setName(deliveryGuy.getName());
         deliveryGuyDTO.setPhoneNo(deliveryGuy.getPhoneNo());
+        deliveryGuyDTO.setRole(deliveryGuy.getRole());
+        deliveryGuyDTO.setOrderIds(getSetOfId(deliveryGuy.getOrders()));
         return deliveryGuyDTO;
     }
 
@@ -110,6 +118,8 @@ public class MapperUtil {
         restaurant.setName(restaurantDTO.getName());
         restaurant.setPhoneNo(restaurantDTO.getPhoneNo());
         restaurant.setEmail(restaurantDTO.getEmail());
+        restaurant.setPassword(restaurantDTO.getPassword());
+        restaurant.setRole("RESTRO");
         return restaurant;
     }
 
@@ -119,6 +129,7 @@ public class MapperUtil {
         restaurantDTO.setName(restaurant.getName());
         restaurantDTO.setPhoneNo(restaurant.getPhoneNo());
         restaurantDTO.setEmail(restaurant.getEmail());
+        restaurantDTO.setRole(restaurant.getRole());
         restaurantDTO.setOrderIds(getSetOfId(restaurant.getOrders()));
         restaurantDTO.setFoodItemIds(getSetOfId(restaurant.getFoodItems()));
         return restaurantDTO;
@@ -130,6 +141,7 @@ public class MapperUtil {
         restaurantOwnerDTO.setName(restaurantOwner.getName());
         restaurantOwnerDTO.setEmail(restaurantOwner.getEmail());
         restaurantOwnerDTO.setPhoneNo(restaurantOwner.getPhoneNo());
+        restaurantOwnerDTO.setRole(restaurantOwner.getRole());
         restaurantOwnerDTO.setRestaurantIds(getSetOfId(restaurantOwner.getRestaurants()));
         return restaurantOwnerDTO;
     }
@@ -139,6 +151,8 @@ public class MapperUtil {
         restaurantOwner.setName(restaurantOwnerDTO.getName());
         restaurantOwner.setEmail(restaurantOwnerDTO.getEmail());
         restaurantOwner.setPhoneNo(restaurantOwnerDTO.getPhoneNo());
+        restaurantOwner.setPassword(restaurantOwnerDTO.getPassword());
+        restaurantOwner.setRole("OWNER");
         return restaurantOwner;
     }
 }

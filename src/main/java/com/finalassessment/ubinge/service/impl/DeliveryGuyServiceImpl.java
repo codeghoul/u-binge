@@ -61,6 +61,8 @@ public class DeliveryGuyServiceImpl implements DeliveryGuyService {
         deliveryGuy.setName(deliveryGuyDTO.getName());
         deliveryGuy.setPhoneNo(deliveryGuyDTO.getPhoneNo());
         deliveryGuy.setEmail(deliveryGuyDTO.getEmail());
+        deliveryGuy.setPassword(deliveryGuyDTO.getPassword());
+        deliveryGuy.setRole("DELIVERY");
         deliveryGuyRepository.saveAndFlush(deliveryGuy);
         return MapperUtil.toDeliveryGuyDTO(deliveryGuy);
     }

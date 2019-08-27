@@ -24,6 +24,12 @@ public class RestaurantController {
         this.restaurantService = restaurantService;
     }
 
+    @GetMapping(value = "/restaurants")
+    public ResponseEntity<?> getAllRestaurants() {
+        log.debug("Getting all Restaurants");
+        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.findAll());
+    }
+
     @GetMapping(value = "/restaurants/{restaurantId}")
     public ResponseEntity<RestaurantDTO> getRestaurant(@PathVariable Long restaurantId) {
         log.debug("Getting Restaurant by id.");
