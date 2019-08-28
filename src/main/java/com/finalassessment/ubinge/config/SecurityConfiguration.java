@@ -18,7 +18,7 @@ import javax.sql.DataSource;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private CustomEntryPoint authenticationEntryPoint;
+    private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -48,10 +48,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/admin/**").access("hasAuthority('ADMIN')")
+                .antMatchers("/restaurantowners/**").access("hasAuthority('OWNER')")
                 .anyRequest().authenticated()
                 .and().csrf().disable()
                 .httpBasic()
-                .authenticationEntryPoint(authenticationEntryPoint);
+                .authenticationEntryPoint(restAuthenticationEntryPoint);
 
 
         http.addFilterAfter(new CustomFilter(),
