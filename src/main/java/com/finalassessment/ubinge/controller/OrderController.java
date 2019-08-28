@@ -14,6 +14,9 @@ import javax.validation.Valid;
 
 @Slf4j
 @RestController
+/**
+ * Controller to perform order related components.
+ */
 public class OrderController {
     private OrderService orderService;
 
@@ -22,6 +25,16 @@ public class OrderController {
         this.orderService = orderService;
     }
 
+    /**
+     * Create a order and persists in database.
+     * Takes:
+     * customerId,
+     * restaurantId,
+     * etc..
+     *
+     * @param orderDTO
+     * @return
+     */
     @PostMapping("/orders")
     public ResponseEntity<OrderDTO> createOrder(@Valid @RequestBody OrderDTO orderDTO) {
         log.debug("Creating new Order.");

@@ -1,5 +1,6 @@
 package com.finalassessment.ubinge.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.finalassessment.ubinge.constants.OrderStatus;
 import com.finalassessment.ubinge.constants.PaymentMode;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import java.util.Set;
 
 @Getter
 @Setter
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OrderDTO extends BaseEntityDTO {
     private Long customerId;
 

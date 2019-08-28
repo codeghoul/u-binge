@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+/**
+ * Controller to map all Admin Related operations.
+ */
 public class AdminController {
     private RoleService roleService;
     private UserService userService;
@@ -19,6 +22,12 @@ public class AdminController {
         this.userService = userService;
     }
 
+    /**
+     * Persists a role in database.
+     *
+     * @param role
+     * @return
+     */
     @PostMapping(value = "/admin/roles")
     public Role save(@RequestBody Role role) {
         return roleService.save(role);
