@@ -34,9 +34,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("user1").password(bCryptPasswordEncoder.encode("user1Pass"))
-                .authorities("ROLE_USER");
+//        auth.inMemoryAuthentication()
+//                .withUser("user1").password(bCryptPasswordEncoder.encode("user1Pass"))
+//                .authorities("ROLE_USER");
+        auth.jdbcAuthentication()
+                .usersByUsernameQuery(usersQuery)
+                .authoritiesByUsernameQuery(rolesQuery)
+                .dataSource(dataSource)
+                .passwordEncoder(bCryptPasswordEncoder);
     }
 
     @Override
@@ -44,9 +49,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/securityNone").permitAll()
                 .anyRequest().authenticated()
-                .and()
+                .and().csrf().disable()
                 .httpBasic()
                 .authenticationEntryPoint(authenticationEntryPoint);
+
 
         http.addFilterAfter(new CustomFilter(),
                 BasicAuthenticationFilter.class);

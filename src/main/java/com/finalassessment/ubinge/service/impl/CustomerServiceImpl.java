@@ -20,6 +20,7 @@ import com.finalassessment.ubinge.service.CustomerService;
 import com.finalassessment.ubinge.utility.MapperUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,13 +33,15 @@ public class CustomerServiceImpl implements CustomerService {
     private OrderRepository orderRepository;
     private UserRepository userRepository;
     private RoleRepository roleRepository;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public CustomerServiceImpl(CustomerRepository customerRepository, OrderRepository orderRepository, UserRepository userRepository, RoleRepository roleRepository) {
+    public CustomerServiceImpl(CustomerRepository customerRepository, OrderRepository orderRepository, UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.customerRepository = customerRepository;
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
@@ -79,7 +82,7 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setName(customerDTO.getName());
         customer.setEmail(customerDTO.getEmail());
         customer.setPhoneNo(customerDTO.getPhoneNo());
-        customer.setPassword(customerDTO.getPassword());
+        customer.setPassword(bCryptPasswordEncoder.encode(customerDTO.getPassword()));
 
         userRepository.save(user);
         customerRepository.save(customer);
@@ -140,8 +143,8 @@ public class CustomerServiceImpl implements CustomerService {
     private void createUser(Customer customer) {
         User user = new User();
         user.setEmail(customer.getEmail());
-        user.setPassword(customer.getPassword());
-        user.setRole(roleRepository.findByRole("C"));
+        user.setPassword(bCryptPasswordEncoder.encode(customer.getPassword()));
+        user.setRole(roleRepository.findByRole("CUSTOMER"));
         userRepository.save(user);
     }
 }

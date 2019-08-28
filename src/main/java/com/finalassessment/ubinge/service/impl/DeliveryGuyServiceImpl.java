@@ -20,6 +20,7 @@ import com.finalassessment.ubinge.service.DeliveryGuyService;
 import com.finalassessment.ubinge.utility.MapperUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,11 +33,16 @@ public class DeliveryGuyServiceImpl implements DeliveryGuyService {
     private OrderRepository orderRepository;
     private RoleRepository roleRepository;
     private UserRepository userRepository;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public DeliveryGuyServiceImpl(DeliveryGuyRepository deliveryGuyRepository, OrderRepository orderRepository) {
+    public DeliveryGuyServiceImpl(DeliveryGuyRepository deliveryGuyRepository, OrderRepository orderRepository,
+                                  RoleRepository roleRepository, UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.deliveryGuyRepository = deliveryGuyRepository;
         this.orderRepository = orderRepository;
+        this.roleRepository = roleRepository;
+        this.userRepository = userRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
@@ -65,11 +71,11 @@ public class DeliveryGuyServiceImpl implements DeliveryGuyService {
         log.debug("Updating Delivery Guy.");
         DeliveryGuy deliveryGuy = getDeliveryGuy(deliveryGuyId);
         User user = userRepository.findByEmail(deliveryGuy.getEmail());
-
+        user.setEmail(deliveryGuyDTO.getEmail());
         deliveryGuy.setName(deliveryGuyDTO.getName());
         deliveryGuy.setPhoneNo(deliveryGuyDTO.getPhoneNo());
         deliveryGuy.setEmail(deliveryGuyDTO.getEmail());
-        deliveryGuy.setPassword(deliveryGuyDTO.getPassword());
+        deliveryGuy.setPassword(bCryptPasswordEncoder.encode(deliveryGuyDTO.getPassword()));
 
         userRepository.saveAndFlush(user);
         deliveryGuyRepository.saveAndFlush(deliveryGuy);
@@ -134,8 +140,8 @@ public class DeliveryGuyServiceImpl implements DeliveryGuyService {
     private void createUser(DeliveryGuy deliveryGuy) {
         User user = new User();
         user.setEmail(deliveryGuy.getEmail());
-        user.setPassword(deliveryGuy.getPassword());
-        user.setRole(roleRepository.findByRole("DG"));
+        user.setPassword(bCryptPasswordEncoder.encode(deliveryGuy.getPassword()));
+        user.setRole(roleRepository.findByRole("DELIVERY"));
         userRepository.save(user);
     }
 }

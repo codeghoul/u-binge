@@ -16,6 +16,7 @@ import com.finalassessment.ubinge.utility.MapperUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,13 +29,15 @@ public class RestaurantOwnerServiceImpl implements RestaurantOwnerService {
     private RestaurantRepository restaurantRepository;
     private RoleRepository roleRepository;
     private UserRepository userRepository;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public RestaurantOwnerServiceImpl(RestaurantOwnerRepository restaurantOwnerRepository, RestaurantRepository restaurantRepository, UserRepository userRepository, RoleRepository roleRepository) {
+    public RestaurantOwnerServiceImpl(RestaurantOwnerRepository restaurantOwnerRepository, RestaurantRepository restaurantRepository, UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.restaurantOwnerRepository = restaurantOwnerRepository;
         this.restaurantRepository = restaurantRepository;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
@@ -74,7 +77,7 @@ public class RestaurantOwnerServiceImpl implements RestaurantOwnerService {
         restaurantOwner.setName(restaurantOwnerDTO.getName());
         restaurantOwner.setEmail(restaurantOwnerDTO.getEmail());
         restaurantOwner.setPhoneNo(restaurantOwnerDTO.getPhoneNo());
-        restaurantOwner.setPassword(restaurantOwnerDTO.getPassword());
+        restaurantOwner.setPassword(bCryptPasswordEncoder.encode(restaurantOwnerDTO.getPassword()));
         return MapperUtil.toRestaurantOwnerDTO(restaurantOwnerRepository.saveAndFlush(restaurantOwner));
     }
 
@@ -91,7 +94,7 @@ public class RestaurantOwnerServiceImpl implements RestaurantOwnerService {
         restaurant.setName(restaurantDTO.getName());
         restaurant.setEmail(restaurantDTO.getEmail());
         restaurant.setPhoneNo(restaurantDTO.getPhoneNo());
-        restaurant.setPassword(restaurantDTO.getPassword());
+        restaurant.setPassword(bCryptPasswordEncoder.encode(restaurantDTO.getPassword()));
         return MapperUtil.toRestaurantDTO(restaurantRepository.saveAndFlush(restaurant));
     }
 
@@ -135,16 +138,16 @@ public class RestaurantOwnerServiceImpl implements RestaurantOwnerService {
     private void createUser(Restaurant restaurant) {
         User user = new User();
         user.setEmail(restaurant.getEmail());
-        user.setPassword(restaurant.getPassword());
-        user.setRole(roleRepository.findByRole("R"));
+        user.setPassword(bCryptPasswordEncoder.encode(restaurant.getPassword()));
+        user.setRole(roleRepository.findByRole("RESTRO"));
         userRepository.save(user);
     }
 
     private void createUser(RestaurantOwner restaurantOwner) {
         User user = new User();
         user.setEmail(restaurantOwner.getEmail());
-        user.setPassword(restaurantOwner.getPassword());
-        user.setRole(roleRepository.findByRole("RO"));
+        user.setPassword(bCryptPasswordEncoder.encode(restaurantOwner.getPassword()));
+        user.setRole(roleRepository.findByRole("OWNER"));
         userRepository.save(user);
     }
 }
