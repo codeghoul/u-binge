@@ -1,4 +1,4 @@
-package com.finalassessment.ubinge.pojo;
+package com.finalassessment.ubinge.dto;
 
 import lombok.Data;
 

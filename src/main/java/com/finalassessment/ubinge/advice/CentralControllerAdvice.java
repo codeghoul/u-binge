@@ -1,10 +1,10 @@
 package com.finalassessment.ubinge.advice;
 
+import com.finalassessment.ubinge.dto.ErrorDetails;
 import com.finalassessment.ubinge.exception.NotFoundException;
 import com.finalassessment.ubinge.exception.OrderStatusException;
 import com.finalassessment.ubinge.exception.PaymentModeException;
 import com.finalassessment.ubinge.exception.PriceMismatchException;
-import com.finalassessment.ubinge.pojo.ErrorDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
