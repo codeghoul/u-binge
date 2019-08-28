@@ -19,6 +19,6 @@ public abstract class GeneralDetails extends BaseEntity {
     @Column(name = "email", nullable = false, length = 32)
     private String email;
 
-    @Column(nullable = false, length = 32)
+    @Column(nullable = false, length = 255)
     private String password;
 }

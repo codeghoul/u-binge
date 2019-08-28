@@ -3,6 +3,7 @@ package com.finalassessment.ubinge.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -46,10 +47,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/admin/**").access("hasAuthority('ADMIN')")
-                .antMatchers("/customers/**").access("hasAnyAuthority('ADMIN', 'CUSTOMER')")
-                .antMatchers("/restaurantowners/**").access("hasAnyAuthority('ADMIN', 'OWNER')")
-                .antMatchers("/restaurants/**/").access("hasAnyAuthority('ADMIN', 'OWNER', 'RESTRO')")
-                .antMatchers("/deliveryguys/**").access("hasAnyAuthority('ADMIN', 'DELIVERY')")
+                .antMatchers(HttpMethod.GET, "/restaurantowners/**").access("hasAnyAuthority({'ADMIN', 'OWNER'})")
+                .antMatchers(HttpMethod.POST, "/restaurantowners/**").access("hasAnyAuthority({'ADMIN'})")
+                .antMatchers(HttpMethod.PUT, "/restaurantowners/**").access("hasAnyAuthority({'ADMIN', 'OWNER'})")
+                .antMatchers(HttpMethod.DELETE, "/restaurantowners/**").access("hasAnyAuthority({'ADMIN', 'OWNER'})")
+                .antMatchers(HttpMethod.POST, "/restaurants/**").access("hasAnyAuthority({'ADMIN', 'RESTRO'})")
+                .antMatchers(HttpMethod.PUT, "/restaurants/**").access("hasAnyAuthority({'ADMIN', 'RESTRO'})")
+                .antMatchers(HttpMethod.DELETE, "/restaurants/**").access("hasAnyAuthority({'ADMIN', 'RESTRO'})")
+                .antMatchers(HttpMethod.GET, "/customers/**").access("hasAnyAuthority({'ADMIN', 'CUSTOMER'})")
+                .antMatchers(HttpMethod.POST, "/customers/**").access("hasAnyAuthority({'ADMIN'})")
+                .antMatchers(HttpMethod.PUT, "/customers/**").access("hasAnyAuthority({'ADMIN', 'CUSTOMER'})")
+                .antMatchers(HttpMethod.DELETE, "/customers/**").access("hasAnyAuthority({'ADMIN'})")
+                .antMatchers(HttpMethod.GET, "/deliveryguys/**").access("hasAnyAuthority({'ADMIN', 'DELIVERY'})")
+                .antMatchers(HttpMethod.POST, "/deliveryguys/**").access("hasAnyAuthority({'ADMIN'})")
+                .antMatchers(HttpMethod.PUT, "/deliveryguys/**").access("hasAnyAuthority({'ADMIN', 'DELIVERY'})")
+                .antMatchers(HttpMethod.DELETE, "/deliveryguys/**").access("hasAnyAuthority({'ADMIN', 'DELIVERY'})")
                 .anyRequest().authenticated()
                 .and()
                 .csrf().disable()
