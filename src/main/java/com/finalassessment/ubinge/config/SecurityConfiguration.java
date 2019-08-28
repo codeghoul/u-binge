@@ -39,8 +39,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authoritiesByUsernameQuery(rolesQuery)
                 .dataSource(dataSource)
                 .passwordEncoder(bCryptPasswordEncoder);
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//       authentication.getName();
+
+        auth.inMemoryAuthentication()
+                .withUser("admin")
+                .password(bCryptPasswordEncoder.encode("admin"))
+                .authorities("ADMIN");
     }
 
     @Override
