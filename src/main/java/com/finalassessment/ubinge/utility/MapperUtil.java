@@ -1,5 +1,6 @@
 package com.finalassessment.ubinge.utility;
 
+import com.finalassessment.ubinge.constants.PaymentMode;
 import com.finalassessment.ubinge.dto.*;
 import com.finalassessment.ubinge.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,8 +79,8 @@ public class MapperUtil {
         orderDTO.setCustomerId(order.getCustomer().getId());
         orderDTO.setRestaurantId(order.getRestaurant().getId());
         orderDTO.setDeliveryGuyId(order.getDeliveryGuy().getId());
-        orderDTO.setOrderStatus(order.getOrderStatus());
-        orderDTO.setPaymentMode(order.getPaymentMode());
+        orderDTO.setOrderStatus(order.getOrderStatus().getDescription());
+        orderDTO.setPaymentMode(order.getPaymentMode().getDescription());
         orderDTO.setTimestamp(order.getTimestamp());
         orderDTO.setTotalPrice(order.getTotalPrice());
         Set<OrderFoodItemDTO> orderFoodItemDTOs = order.getOrderFoodItems().stream()
@@ -91,7 +92,7 @@ public class MapperUtil {
 
     public static Order toOrder(OrderDTO orderDTO) {
         Order order = new Order();
-        order.setPaymentMode(orderDTO.getPaymentMode());
+        order.setPaymentMode(PaymentMode.fromDescription(orderDTO.getPaymentMode()));
         order.setTimestamp(LocalDateTime.now());
         return order;
     }

@@ -1,11 +1,10 @@
 package com.finalassessment.ubinge.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.finalassessment.ubinge.constants.OrderStatus;
-import com.finalassessment.ubinge.constants.PaymentMode;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,9 +21,10 @@ public class OrderDTO extends BaseEntityDTO {
 
     private LocalDateTime timestamp;
 
-    private PaymentMode paymentMode;
+    @Pattern(regexp = "cod|caod|card", flags = Pattern.Flag.CASE_INSENSITIVE, message = "Payment Mode can be: cod, caod(Card on Delivery), card")
+    private String paymentMode;
 
-    private OrderStatus orderStatus;
+    private String orderStatus;
 
     private Double totalPrice;
 

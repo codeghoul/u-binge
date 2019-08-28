@@ -1,14 +1,12 @@
 package com.finalassessment.ubinge.service.impl;
 
 import com.finalassessment.ubinge.constants.OrderStatus;
-import com.finalassessment.ubinge.constants.PaymentMode;
 import com.finalassessment.ubinge.dto.DeliveryGuyDTO;
 import com.finalassessment.ubinge.dto.OrderDTO;
 import com.finalassessment.ubinge.dto.OrderModificationDTO;
 import com.finalassessment.ubinge.exception.DeliveryGuyNotFoundException;
 import com.finalassessment.ubinge.exception.OrderNotFoundException;
 import com.finalassessment.ubinge.exception.OrderStatusException;
-import com.finalassessment.ubinge.exception.PaymentModeException;
 import com.finalassessment.ubinge.model.DeliveryGuy;
 import com.finalassessment.ubinge.model.Order;
 import com.finalassessment.ubinge.model.User;
@@ -114,12 +112,12 @@ public class DeliveryGuyServiceImpl implements DeliveryGuyService {
             throw new OrderNotFoundException(orderId);
         }
 
-        PaymentMode paymentMode = modification.getPaymentMode();
-        OrderStatus orderStatus = modification.getOrderStatus();
+//        PaymentMode paymentMode = PaymentMode.fromDescription(modification.getPaymentMode());
+        OrderStatus orderStatus = OrderStatus.fromDescription(modification.getOrderStatus());
 
-        if (paymentMode != null) {
-            throw new PaymentModeException("Delivery Guy cannot change Payment Mode.");
-        }
+//        if (paymentMode != null) {
+//            throw new PaymentModeException("Delivery Guy cannot change Payment Mode.");
+//        }
 
         if (order.getOrderStatus().getDescription().equals("picked up") && orderStatus.getDescription().equals("delivered")) {
             order.setOrderStatus(OrderStatus.DELIVERED);

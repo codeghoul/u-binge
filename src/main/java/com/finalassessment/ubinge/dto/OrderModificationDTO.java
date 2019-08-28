@@ -1,15 +1,16 @@
 package com.finalassessment.ubinge.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.finalassessment.ubinge.constants.OrderStatus;
-import com.finalassessment.ubinge.constants.PaymentMode;
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.validation.constraints.Pattern;
 
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OrderModificationDTO {
-    OrderStatus orderStatus;
-    PaymentMode paymentMode;
+    @Pattern(regexp = "cancelled|preparing|delivered|picked up", flags = Pattern.Flag.CASE_INSENSITIVE,
+            message = "Order status not accepted. User can send cancelled, Restro can send cancelled or preparing. Delivery can send picked up or delivered")
+    String orderStatus;
 }

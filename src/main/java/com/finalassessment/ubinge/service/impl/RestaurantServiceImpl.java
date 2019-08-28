@@ -1,14 +1,12 @@
 package com.finalassessment.ubinge.service.impl;
 
 import com.finalassessment.ubinge.constants.OrderStatus;
-import com.finalassessment.ubinge.constants.PaymentMode;
 import com.finalassessment.ubinge.dto.FoodItemDTO;
 import com.finalassessment.ubinge.dto.OrderDTO;
 import com.finalassessment.ubinge.dto.OrderModificationDTO;
 import com.finalassessment.ubinge.dto.RestaurantDTO;
 import com.finalassessment.ubinge.exception.OrderNotFoundException;
 import com.finalassessment.ubinge.exception.OrderStatusException;
-import com.finalassessment.ubinge.exception.PaymentModeException;
 import com.finalassessment.ubinge.exception.RestaurantNotFoundException;
 import com.finalassessment.ubinge.model.FoodItem;
 import com.finalassessment.ubinge.model.Order;
@@ -116,12 +114,12 @@ public class RestaurantServiceImpl implements RestaurantService {
             throw new RestaurantNotFoundException(restaurantId);
         }
 
-        OrderStatus orderStatus = modification.getOrderStatus();
-        PaymentMode paymentMode = modification.getPaymentMode();
+        OrderStatus orderStatus = OrderStatus.fromDescription(modification.getOrderStatus());
+//        PaymentMode paymentMode = PaymentMode.fromDescription(modification.getPaymentMode());
 
-        if (paymentMode != null) {
-            throw new PaymentModeException("Restaurant cannot change Payment Mode.");
-        }
+//        if (paymentMode != null) {
+//            throw new PaymentModeException("Restaurant cannot change Payment Mode.");
+//        }
 
         if (order.getOrderStatus().getDescription().equals("approved")) {
             order.setOrderStatus(orderStatus);
