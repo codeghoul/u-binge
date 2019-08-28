@@ -13,7 +13,7 @@ public class User extends BaseEntity {
     @Column(name = "email", nullable = false, length = 32)
     String email;
     String password;
-    boolean isActive;
+    Boolean isActive = true;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
