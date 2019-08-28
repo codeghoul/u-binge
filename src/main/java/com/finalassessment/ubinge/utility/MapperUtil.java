@@ -2,18 +2,27 @@ package com.finalassessment.ubinge.utility;
 
 import com.finalassessment.ubinge.dto.*;
 import com.finalassessment.ubinge.model.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class MapperUtil {
+    private static BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    public MapperUtil(BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
+
     public static Customer toCustomer(CustomerDTO customerDTO) {
         Customer customer = new Customer();
         customer.setName(customerDTO.getName());
         customer.setPhoneNo(customerDTO.getPhoneNo());
         customer.setEmail(customerDTO.getEmail());
-        customer.setPassword(customerDTO.getPassword());
+        customer.setPassword(bCryptPasswordEncoder.encode(customerDTO.getPassword()));
         return customer;
     }
 
@@ -94,7 +103,7 @@ public class MapperUtil {
         deliveryGuy.setName(deliveryGuyDTO.getName());
         deliveryGuy.setEmail(deliveryGuyDTO.getEmail());
         deliveryGuy.setPhoneNo(deliveryGuyDTO.getPhoneNo());
-        deliveryGuy.setPassword(deliveryGuyDTO.getPassword());
+        deliveryGuy.setPassword(bCryptPasswordEncoder.encode(deliveryGuyDTO.getPassword()));
         return deliveryGuy;
     }
 
@@ -114,7 +123,7 @@ public class MapperUtil {
         restaurant.setName(restaurantDTO.getName());
         restaurant.setPhoneNo(restaurantDTO.getPhoneNo());
         restaurant.setEmail(restaurantDTO.getEmail());
-        restaurant.setPassword(restaurantDTO.getPassword());
+        restaurant.setPassword(bCryptPasswordEncoder.encode(restaurantDTO.getPassword()));
         return restaurant;
     }
 
@@ -129,6 +138,15 @@ public class MapperUtil {
         return restaurantDTO;
     }
 
+    public static RestaurantOwner toRestaurantOwner(RestaurantOwnerDTO restaurantOwnerDTO) {
+        RestaurantOwner restaurantOwner = new RestaurantOwner();
+        restaurantOwner.setName(restaurantOwnerDTO.getName());
+        restaurantOwner.setEmail(restaurantOwnerDTO.getEmail());
+        restaurantOwner.setPhoneNo(restaurantOwnerDTO.getPhoneNo());
+        restaurantOwner.setPassword(bCryptPasswordEncoder.encode(restaurantOwnerDTO.getPassword()));
+        return restaurantOwner;
+    }
+
     public static RestaurantOwnerDTO toRestaurantOwnerDTO(RestaurantOwner restaurantOwner) {
         RestaurantOwnerDTO restaurantOwnerDTO = new RestaurantOwnerDTO();
         restaurantOwnerDTO.setId(restaurantOwner.getId());
@@ -137,14 +155,5 @@ public class MapperUtil {
         restaurantOwnerDTO.setPhoneNo(restaurantOwner.getPhoneNo());
         restaurantOwnerDTO.setRestaurantIds(getSetOfId(restaurantOwner.getRestaurants()));
         return restaurantOwnerDTO;
-    }
-
-    public static RestaurantOwner toRestaurantOwner(RestaurantOwnerDTO restaurantOwnerDTO) {
-        RestaurantOwner restaurantOwner = new RestaurantOwner();
-        restaurantOwner.setName(restaurantOwnerDTO.getName());
-        restaurantOwner.setEmail(restaurantOwnerDTO.getEmail());
-        restaurantOwner.setPhoneNo(restaurantOwnerDTO.getPhoneNo());
-        restaurantOwner.setPassword(restaurantOwnerDTO.getPassword());
-        return restaurantOwner;
     }
 }
